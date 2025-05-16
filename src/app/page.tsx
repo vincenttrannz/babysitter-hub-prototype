@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Puzzle, Users, Gift, CalendarPlus, ListChecks, LayoutDashboard, ShieldCheck } from 'lucide-react';
@@ -51,7 +52,7 @@ export default function HomePage() {
                 data-ai-hint="caregiver child"
                 width={600}
                 height={400}
-                className="mx-auto overflow-hidden rounded-xl object-cover sm:w-full lg:order-last shadow-lg"
+                className="mx-auto overflow-hidden rounded-xl lg:order-last shadow-lg" // Simplified classes
               />
             </div>
           </div>
