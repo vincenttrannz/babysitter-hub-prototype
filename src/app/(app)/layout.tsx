@@ -25,7 +25,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
   const allNavItems = isAdmin ? [...navItems, ...adminNavItems] : navItems;
 
   return (
-    <SidebarProvider defaultOpen={true}>
+    <SidebarProvider open={true} defaultOpen={true}>
       <Sidebar side="left" variant="sidebar" collapsible="icon" className="border-r">
         <SidebarHeader className="p-4">
           <Link href="/dashboard" className="flex items-center gap-2 text-lg font-semibold text-sidebar-foreground">
