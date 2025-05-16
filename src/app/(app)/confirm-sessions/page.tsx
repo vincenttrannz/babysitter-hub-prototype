@@ -1,3 +1,4 @@
+
 import { SessionConfirmationCard } from '@/components/session/session-confirmation-card';
 import { mockSessions, mockUser } from '@/lib/mock-data';
 import type { Session } from '@/types';
