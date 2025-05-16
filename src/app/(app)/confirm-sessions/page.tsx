@@ -15,7 +15,7 @@ export default function ConfirmSessionsPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-primary">Pending Session Confirmations</h1>
+        <h1 className="text-3xl font-bold text-primary">Pending Session Confirmations</h1>
         <p className="text-muted-foreground">Review the sessions below that require your confirmation.</p>
       </div>
 

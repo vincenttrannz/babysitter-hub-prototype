@@ -39,7 +39,7 @@ export default function AdminPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-primary">Admin Panel</h1>
+        <h1 className="text-3xl font-bold text-primary">Admin Panel</h1>
         <p className="text-muted-foreground">Manage members, settings, and platform operations.</p>
       </div>
 

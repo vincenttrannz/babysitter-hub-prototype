@@ -1,3 +1,4 @@
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { PointsSummary } from '@/components/dashboard/points-summary';
@@ -18,7 +19,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-primary">Welcome back, {currentUser.name}!</h1>
+        <h1 className="text-3xl font-bold text-primary">Welcome back, {currentUser.name}!</h1>
         <p className="text-muted-foreground">Here's an overview of your Family Time Bank activity.</p>
       </div>
 

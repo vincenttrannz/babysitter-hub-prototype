@@ -1,3 +1,4 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,7 +12,7 @@ export default function MembersPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight text-primary flex items-center gap-2">
+        <h1 className="text-3xl font-bold text-primary flex items-center gap-2">
           <Users className="h-8 w-8" /> Community Members
         </h1>
         <p className="text-muted-foreground">
