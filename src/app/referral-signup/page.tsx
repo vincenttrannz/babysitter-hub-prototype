@@ -58,7 +58,7 @@ export default function ReferralSignupPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-secondary p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-secondary pt-12 px-6 pb-6">
        <Link href="/" className="flex items-center gap-2 text-2xl font-semibold text-primary mb-8">
           <Baby className="h-8 w-8" />
           <span>Family Time Bank</span>
