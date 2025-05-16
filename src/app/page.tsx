@@ -46,9 +46,9 @@ export default function HomePage() {
                 </div>
               </div>
               <Image
-                src="https://placehold.co/600x400.png"
-                alt="Happy families and children playing"
-                data-ai-hint="family children playing"
+                src="https://storage.googleapis.com/appengine-sdg-sandbox-resources/image_97a38030277a71ae51579d670c010739.png"
+                alt="Illustration of a caregiver and child"
+                data-ai-hint="caregiver child"
                 width={600}
                 height={400}
                 className="mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square shadow-lg"
