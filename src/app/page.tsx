@@ -34,12 +34,12 @@ export default function HomePage() {
                     Childcare Exchange Made Easy
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    Babysitter Hub is a community-based babysitting exchange. Earn points by helping others, spend them when you need a hand.
+                    Babysitter Hub is a community-based babysitting exchange. Join or start a trusted community, earn points by helping others, and spend them when you need a hand.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
-                    <Link href="/referral-signup">Join Our Community</Link>
+                    <Link href="/referral-signup">Join or Start a Hub</Link>
                   </Button>
                   <Button asChild variant="outline" size="lg" className="border-primary text-primary hover:bg-primary/10">
                     <Link href="#how-it-works">Learn More</Link>
@@ -52,7 +52,7 @@ export default function HomePage() {
                 data-ai-hint="caregiver child"
                 width={600}
                 height={400}
-                className="mx-auto overflow-hidden rounded-xl lg:order-last shadow-lg" // Simplified classes
+                className="mx-auto overflow-hidden rounded-xl lg:order-last shadow-lg"
               />
             </div>
           </div>
