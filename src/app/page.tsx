@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Baby, Users, Gift, CalendarPlus, ListChecks, LayoutDashboard, ShieldCheck } from 'lucide-react';
+import { Puzzle, Users, Gift, CalendarPlus, ListChecks, LayoutDashboard, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 
 export default function HomePage() {
@@ -8,8 +8,8 @@ export default function HomePage() {
     <div className="flex flex-col min-h-screen">
       <header className="px-4 lg:px-6 h-16 flex items-center bg-primary text-primary-foreground shadow-md">
         <Link href="#" className="flex items-center justify-center gap-2">
-          <Baby className="h-7 w-7" />
-          <span className="text-xl font-bold">Family Time Bank</span>
+          <Puzzle className="h-7 w-7" />
+          <span className="text-xl font-bold">Babysitter Hub</span>
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
           <Link href="#features" className="text-sm font-medium hover:underline underline-offset-4">
@@ -33,7 +33,7 @@ export default function HomePage() {
                     Childcare Exchange Made Easy
                   </h1>
                   <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    Family Time Bank is a community-based babysitting exchange. Earn points by helping others, spend them when you need a hand.
+                    Babysitter Hub is a community-based babysitting exchange. Earn points by helping others, spend them when you need a hand.
                   </p>
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -104,7 +104,7 @@ export default function HomePage() {
         <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32 bg-secondary">
           <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
             <div className="space-y-3">
-              <h2 className="text-3xl font-bold tracking-tighter text-primary md:text-4xl/tight">How Family Time Bank Works</h2>
+              <h2 className="text-3xl font-bold tracking-tighter text-primary md:text-4xl/tight">How Babysitter Hub Works</h2>
               <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Simple steps to join and participate in our childcare exchange community. New members start with 10 points!
               </p>
@@ -132,7 +132,7 @@ export default function HomePage() {
         </section>
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t bg-primary text-primary-foreground">
-        <p className="text-xs">&copy; {new Date().getFullYear()} Family Time Bank. All rights reserved.</p>
+        <p className="text-xs">&copy; {new Date().getFullYear()} Babysitter Hub. All rights reserved.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link href="#" className="text-xs hover:underline underline-offset-4">
             Terms of Service

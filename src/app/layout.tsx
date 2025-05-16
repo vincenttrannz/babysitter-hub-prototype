@@ -8,7 +8,7 @@ const geistSans = GeistSans;
 const geistMono = GeistMono;
 
 export const metadata: Metadata = {
-  title: 'Family Time Bank',
+  title: 'Babysitter Hub',
   description: 'A community-based babysitting exchange platform.',
 };
 

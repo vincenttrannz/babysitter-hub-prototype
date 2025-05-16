@@ -1,14 +1,14 @@
 import type { NavItem } from '@/types';
-import { LayoutDashboard, CalendarPlus, ListChecks, ShieldCheck, UserPlus, Users } from 'lucide-react';
+import { LayoutDashboard, CalendarPlus, ListChecks, ShieldCheck, UserPlus, Users, Puzzle } from 'lucide-react'; // Added Puzzle
 
 export const siteConfig = {
-  name: "Family Time Bank",
+  name: "Babysitter Hub", // Changed from Family Time Bank
   description: "A community-based babysitting exchange platform.",
-  url: "https://familytimebank.example.com", // Replace with your actual URL
-  ogImage: "https://familytimebank.example.com/og.jpg", // Replace with your actual OG image URL
+  url: "https://babysitterhub.example.com", // Updated placeholder URL
+  ogImage: "https://babysitterhub.example.com/og.jpg", // Updated placeholder OG image URL
   links: {
-    twitter: "https://twitter.com/example", // Replace with your Twitter if any
-    github: "https://github.com/example/family-time-bank", // Replace with your GitHub if any
+    twitter: "https://twitter.com/example", 
+    github: "https://github.com/example/babysitter-hub", // Updated placeholder GitHub
   },
 };
 
@@ -53,6 +53,6 @@ export const publicNavItems: NavItem[] = [
     title: "Sign Up",
     href: "/referral-signup",
     icon: UserPlus,
-    description: "Join Family Time Bank.",
+    description: "Join Babysitter Hub.", // Updated text
   },
 ];

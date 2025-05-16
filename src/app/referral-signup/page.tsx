@@ -17,7 +17,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
-import { Baby } from 'lucide-react';
+import { Puzzle } from 'lucide-react'; // Changed from Baby to Puzzle
 
 const referralSignupFormSchema = z.object({
   fullName: z.string().min(2, { message: "Full name must be at least 2 characters." }),
@@ -60,8 +60,8 @@ export default function ReferralSignupPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-secondary pt-12 px-6 pb-6">
        <Link href="/" className="flex items-center gap-2 text-2xl font-semibold text-primary mb-8">
-          <Baby className="h-8 w-8" />
-          <span>Family Time Bank</span>
+          <Puzzle className="h-8 w-8" /> {/* Changed from Baby to Puzzle */}
+          <span>Babysitter Hub</span>
         </Link>
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="text-center">

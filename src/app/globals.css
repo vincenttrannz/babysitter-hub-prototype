@@ -4,78 +4,78 @@
 
 @layer base {
   :root {
-    --background: 60 56% 91%; /* Soft Beige */
-    --foreground: 180 70% 15%; /* Dark Teal */
-    --card: 48 100% 93%; /* Cornsilk */
-    --card-foreground: 180 70% 15%; /* Dark Teal */
-    --popover: 48 100% 93%; /* Cornsilk */
-    --popover-foreground: 180 70% 15%; /* Dark Teal */
-    --primary: 180 100% 25%; /* Warm Teal */
-    --primary-foreground: 0 0% 98%; /* Almost White */
-    --secondary: 60 80% 88%; /* Lighter Beige for secondary elements */
-    --secondary-foreground: 180 100% 20%; /* Mid Teal */
-    --muted: 60 50% 85%; /* Muted Beige */
-    --muted-foreground: 180 50% 35%; /* Muted Teal/Gray */
-    --accent: 16 100% 66%; /* Coral */
-    --accent-foreground: 0 0% 100%; /* White */
+    --background: 60 56% 91%; /* Soft Beige - Unchanged */
+    --foreground: 215 50% 25%; /* New Dark Warm Blue */
+    --card: 50 80% 95%; /* New Fainter Cream/Yellow */
+    --card-foreground: 215 50% 25%; /* New Dark Warm Blue */
+    --popover: 50 80% 95%; /* New Fainter Cream/Yellow */
+    --popover-foreground: 215 50% 25%; /* New Dark Warm Blue */
+    --primary: 215 70% 50%; /* New Warm Blue Primary */
+    --primary-foreground: 0 0% 98%; /* Almost White - Unchanged */
+    --secondary: 50 70% 92%; /* New Fainter Lighter Yellow/Beige */
+    --secondary-foreground: 215 60% 35%; /* New Mid Warm Blue */
+    --muted: 60 50% 85%; /* Muted Beige - Unchanged */
+    --muted-foreground: 215 40% 45%; /* New Muted Warm Blue/Gray */
+    --accent: 16 100% 66%; /* Coral - Unchanged */
+    --accent-foreground: 0 0% 100%; /* White - Unchanged */
     --destructive: 0 84.2% 60.2%; /* Default Red */
     --destructive-foreground: 0 0% 98%; /* Default Light */
-    --border: 60 30% 80%; /* Light Beige Border */
-    --input: 60 30% 78%; /* Slightly darker for input */
-    --ring: 180 100% 30%; /* Warm Teal for Ring */
+    --border: 50 30% 85%; /* New Lighter Beige/Cream Border */
+    --input: 50 30% 83%; /* New Slightly darker for input */
+    --ring: 215 70% 55%; /* New Warm Blue for Ring */
     --radius: 0.5rem;
 
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --chart-1: 16 100% 66%; /* Coral - Accent */
+    --chart-2: 215 70% 65%; /* Mid Blue */
+    --chart-3: 215 50% 45%; /* Darker Blue */
+    --chart-4: 45 80% 75%; /* Fainter Yellow */
+    --chart-5: 35 90% 70%; /* Lighter Orange/Gold */
 
-    --sidebar-background: 180 60% 20%; /* Darker Teal for sidebar */
-    --sidebar-foreground: 180 20% 90%; /* Light text for sidebar */
-    --sidebar-primary: 16 100% 66%; /* Coral as primary in sidebar for contrast */
-    --sidebar-primary-foreground: 0 0% 100%; /* White */
-    --sidebar-accent: 180 50% 30%; /* Muted teal for hover in sidebar */
-    --sidebar-accent-foreground: 0 0% 98%; /* Light text */
-    --sidebar-border: 180 50% 25%;
-    --sidebar-ring: 16 100% 70%;
+    --sidebar-background: 215 40% 20%; /* New Darker Warm Blue for sidebar */
+    --sidebar-foreground: 210 20% 90%; /* Light text for sidebar (slight hue shift) */
+    --sidebar-primary: 16 100% 66%; /* Coral as primary in sidebar for contrast - Unchanged */
+    --sidebar-primary-foreground: 0 0% 100%; /* White - Unchanged */
+    --sidebar-accent: 215 40% 30%; /* New Muted warm blue for hover in sidebar */
+    --sidebar-accent-foreground: 0 0% 98%; /* Light text - Unchanged */
+    --sidebar-border: 215 40% 25%; /* New sidebar border */
+    --sidebar-ring: 16 100% 70%; /* Unchanged */
   }
 
   .dark {
-    --background: 180 15% 10%; /* Darkest Teal/Blue */
-    --foreground: 180 15% 90%; /* Light Teal/Gray */
-    --card: 180 15% 15%;
-    --card-foreground: 180 15% 90%;
-    --popover: 180 15% 15%;
-    --popover-foreground: 180 15% 90%;
-    --primary: 180 100% 35%; /* Brighter Teal */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 180 15% 25%;
-    --secondary-foreground: 180 15% 90%;
-    --muted: 180 15% 20%;
-    --muted-foreground: 180 15% 60%;
-    --accent: 16 100% 70%; /* Brighter Coral */
-    --accent-foreground: 180 100% 5%; /* Very Dark for contrast */
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 180 15% 25%;
-    --input: 180 15% 25%;
-    --ring: 180 100% 40%;
+    --background: 215 15% 10%; /* New Darkest Blue/Gray */
+    --foreground: 210 15% 90%; /* New Light Blue/Gray */
+    --card: 215 15% 15%; /* New Dark Blue Card */
+    --card-foreground: 210 15% 90%; /* New Light Blue/Gray */
+    --popover: 215 15% 15%; /* New Dark Blue Popover */
+    --popover-foreground: 210 15% 90%; /* New Light Blue/Gray */
+    --primary: 215 100% 55%; /* New Brighter Blue for Dark Mode Primary */
+    --primary-foreground: 0 0% 100%; /* Unchanged */
+    --secondary: 215 15% 25%; /* New Dark Blue Secondary */
+    --secondary-foreground: 210 15% 90%; /* New Light Blue/Gray */
+    --muted: 215 15% 20%; /* New Dark Blue Muted */
+    --muted-foreground: 210 15% 60%; /* New Lighter Muted Blue/Gray */
+    --accent: 16 100% 70%; /* Brighter Coral - Unchanged */
+    --accent-foreground: 215 100% 5%; /* New Very Dark Blue for contrast on accent */
+    --destructive: 0 70% 50%; /* Unchanged */
+    --destructive-foreground: 0 0% 98%; /* Unchanged */
+    --border: 215 15% 25%; /* New Dark Blue Border */
+    --input: 215 15% 25%; /* New Dark Blue Input */
+    --ring: 215 100% 60%; /* New Bright Blue Ring */
     
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --chart-1: 215 100% 55%; /* Primary Blue */
+    --chart-2: 215 70% 70%;  /* Lighter Blue */
+    --chart-3: 16 100% 70%;   /* Accent Coral */
+    --chart-4: 45 80% 70%;   /* Fainter Yellow (adjusted for dark bg) */
+    --chart-5: 200 50% 60%;  /* A different lighter blue/cyan */
 
-    --sidebar-background: 180 20% 12%;
-    --sidebar-foreground: 180 15% 85%;
-    --sidebar-primary: 16 100% 70%; /* Coral */
-    --sidebar-primary-foreground: 180 100% 5%;
-    --sidebar-accent: 180 20% 22%;
-    --sidebar-accent-foreground: 180 15% 95%;
-    --sidebar-border: 180 20% 18%;
-    --sidebar-ring: 16 100% 75%;
+    --sidebar-background: 215 20% 12%; /* New Dark Blue Sidebar */
+    --sidebar-foreground: 210 15% 85%; /* New Light Blue/Gray Sidebar Text */
+    --sidebar-primary: 16 100% 70%; /* Coral - Unchanged */
+    --sidebar-primary-foreground: 215 100% 5%; /* New Very Dark Blue for contrast on sidebar primary */
+    --sidebar-accent: 215 20% 22%; /* New Dark Blue Sidebar Accent */
+    --sidebar-accent-foreground: 210 15% 95%; /* New Lighter Blue/Gray Sidebar Accent Text */
+    --sidebar-border: 215 20% 18%; /* New Dark Blue Sidebar Border */
+    --sidebar-ring: 16 100% 75%; /* Unchanged */
   }
 }
 

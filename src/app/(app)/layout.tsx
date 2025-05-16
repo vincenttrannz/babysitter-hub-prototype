@@ -1,7 +1,7 @@
 
 'use client';
 import type { ReactNode } from 'react';
-import { Baby } from 'lucide-react';
+import { Puzzle } from 'lucide-react'; // Changed from Baby to Puzzle
 import {
   SidebarProvider,
   Sidebar,
@@ -29,9 +29,9 @@ export default function AppLayout({ children }: { children: ReactNode }) {
       <Sidebar side="left" variant="sidebar" collapsible="icon" className="border-r">
         <SidebarHeader className="p-4">
           <Link href="/dashboard" className="flex items-center gap-2 text-lg font-semibold text-sidebar-foreground">
-            <Baby className="h-7 w-7 text-sidebar-primary" />
+            <Puzzle className="h-7 w-7 text-sidebar-primary" /> {/* Changed from Baby to Puzzle */}
             <span className="group-data-[state=expanded]:opacity-100 group-data-[state=collapsed]:opacity-0 transition-opacity duration-200">
-              Family Time Bank
+              Babysitter Hub
             </span>
           </Link>
         </SidebarHeader>

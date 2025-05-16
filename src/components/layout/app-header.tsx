@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Baby, UserCircle, LogOut, Settings } from 'lucide-react';
+import { Puzzle, UserCircle, LogOut, Settings } from 'lucide-react'; // Changed from Baby to Puzzle
 import { Button } from '@/components/ui/button';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import {
@@ -11,10 +11,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { mockAdminUser } from '@/lib/mock-data'; // Added import
+import { mockAdminUser } from '@/lib/mock-data';
 
 export function AppHeader() {
-  // Using mockAdminUser for demonstration
   const user = mockAdminUser; 
   const initials = user.name.split(' ').map(n => n[0]).join('');
 
@@ -23,8 +22,8 @@ export function AppHeader() {
       <div className="flex items-center gap-2">
         <SidebarTrigger className="md:hidden" />
         <Link href="/dashboard" className="flex items-center gap-2 text-lg font-semibold text-primary md:text-base">
-          <Baby className="h-7 w-7" />
-          <span className="sr-only sm:not-sr-only">Family Time Bank</span>
+          <Puzzle className="h-7 w-7" /> {/* Changed from Baby to Puzzle */}
+          <span className="sr-only sm:not-sr-only">Babysitter Hub</span>
         </Link>
       </div>
       
