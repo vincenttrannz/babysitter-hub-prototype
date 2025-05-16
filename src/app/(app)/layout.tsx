@@ -17,11 +17,11 @@ import { AppHeader } from '@/components/layout/app-header';
 import { SidebarNav } from '@/components/layout/sidebar-nav';
 import { navItems, adminNavItems } from '@/config/site';
 import Link from 'next/link';
-import { mockAdminUser } from '@/lib/mock-data'; 
+import { mockAdminUser } from '@/lib/mock-data';
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   const currentUser = mockAdminUser;
-  const isAdmin = currentUser.isAdmin ?? false; 
+  const isAdmin = currentUser.isAdmin ?? false;
   const allNavItems = isAdmin ? [...navItems, ...adminNavItems] : navItems;
 
   return (
