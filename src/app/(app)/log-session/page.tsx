@@ -1,3 +1,4 @@
+
 import { LogSessionForm } from '@/components/session/log-session-form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
