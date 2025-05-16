@@ -3,7 +3,7 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import { GenkitProvider } from '@genkit-ai/next';
+// import { GenkitProvider } from '@genkit-ai/next'; // Removed as it's not exported
 
 const geistSans = GeistSans;
 const geistMono = GeistMono;
@@ -21,10 +21,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
-        <GenkitProvider>
+        {/* <GenkitProvider> */}
           {children}
           <Toaster />
-        </GenkitProvider>
+        {/* </GenkitProvider> */}
       </body>
     </html>
   );

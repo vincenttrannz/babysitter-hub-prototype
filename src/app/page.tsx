@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Baby, Users, Gift } from 'lucide-react';
+import { Baby, Users, Gift, CalendarPlus, ListChecks, LayoutDashboard, ShieldCheck } from 'lucide-react';
 import Image from 'next/image';
 
 export default function HomePage() {
