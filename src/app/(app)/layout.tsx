@@ -16,10 +16,12 @@ import { AppHeader } from '@/components/layout/app-header';
 import { SidebarNav } from '@/components/layout/sidebar-nav';
 import { navItems, adminNavItems } from '@/config/site';
 import Link from 'next/link';
+import { mockAdminUser } from '@/lib/mock-data'; // Added import
 
 export default function AppLayout({ children }: { children: ReactNode }) {
-  // Placeholder: determine if user is admin
-  const isAdmin = true; 
+  // For now, we'll assume the mockAdminUser is logged in for admin views.
+  const currentUser = mockAdminUser;
+  const isAdmin = currentUser.isAdmin ?? false; 
   const allNavItems = isAdmin ? [...navItems, ...adminNavItems] : navItems;
 
   return (

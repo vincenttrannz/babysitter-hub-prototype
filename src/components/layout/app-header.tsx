@@ -11,10 +11,11 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { mockAdminUser } from '@/lib/mock-data'; // Added import
 
 export function AppHeader() {
-  // Placeholder user data
-  const user = { name: 'Jane Doe', email: 'jane.doe@example.com', avatarUrl: 'https://placehold.co/100x100.png' };
+  // Using mockAdminUser for demonstration
+  const user = mockAdminUser; 
   const initials = user.name.split(' ').map(n => n[0]).join('');
 
   return (
