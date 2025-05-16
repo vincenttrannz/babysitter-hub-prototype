@@ -1,3 +1,4 @@
+
 'use client';
 import type { ReactNode } from 'react';
 import { Baby } from 'lucide-react';
@@ -16,10 +17,9 @@ import { AppHeader } from '@/components/layout/app-header';
 import { SidebarNav } from '@/components/layout/sidebar-nav';
 import { navItems, adminNavItems } from '@/config/site';
 import Link from 'next/link';
-import { mockAdminUser } from '@/lib/mock-data'; // Added import
+import { mockAdminUser } from '@/lib/mock-data'; 
 
 export default function AppLayout({ children }: { children: ReactNode }) {
-  // For now, we'll assume the mockAdminUser is logged in for admin views.
   const currentUser = mockAdminUser;
   const isAdmin = currentUser.isAdmin ?? false; 
   const allNavItems = isAdmin ? [...navItems, ...adminNavItems] : navItems;
@@ -41,7 +41,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         </SidebarContent>
         <Separator className="bg-sidebar-border" />
         <SidebarFooter className="p-4">
-          <Button variant="outline" className="w-full group-data-[state=collapsed]:hidden">
+          <Button variant="outline" className="w-full group-data-[state=collapsed]:hidden text-foreground">
             Need Help?
           </Button>
         </SidebarFooter>
@@ -55,3 +55,4 @@ export default function AppLayout({ children }: { children: ReactNode }) {
     </SidebarProvider>
   );
 }
+
