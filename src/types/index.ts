@@ -1,3 +1,4 @@
+
 export interface User {
   id: string;
   name: string;
@@ -51,4 +52,19 @@ export interface NavItem {
   external?: boolean;
   label?: string;
   description?: string;
+}
+
+export interface JobPosting {
+  id: string;
+  requestingParentId: string;
+  requestingParentName: string;
+  requestingParentAvatar?: string;
+  date: Date;
+  startTime: string;
+  endTime: string;
+  numberOfChildren: number;
+  childrenAgeRange?: string; // e.g., "3-5 years"
+  notes?: string;
+  status: 'open' | 'filled' | 'expired'; // 'open' means available
+  createdAt: Date;
 }

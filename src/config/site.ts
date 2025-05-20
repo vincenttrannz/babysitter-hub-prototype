@@ -1,14 +1,15 @@
+
 import type { NavItem } from '@/types';
-import { LayoutDashboard, CalendarPlus, ListChecks, ShieldCheck, UserPlus, Users, Puzzle } from 'lucide-react'; // Added Puzzle
+import { LayoutDashboard, CalendarPlus, ListChecks, ShieldCheck, UserPlus, Users, Puzzle, ClipboardList } from 'lucide-react'; // Added Puzzle, ClipboardList
 
 export const siteConfig = {
-  name: "Babysitter Hub", // Changed from Family Time Bank
+  name: "Babysitter Hub",
   description: "A community-based babysitting exchange platform.",
-  url: "https://babysitterhub.example.com", // Updated placeholder URL
-  ogImage: "https://babysitterhub.example.com/og.jpg", // Updated placeholder OG image URL
+  url: "https://babysitterhub.example.com",
+  ogImage: "https://babysitterhub.example.com/og.jpg",
   links: {
-    twitter: "https://twitter.com/example", 
-    github: "https://github.com/example/babysitter-hub", // Updated placeholder GitHub
+    twitter: "https://twitter.com/example",
+    github: "https://github.com/example/babysitter-hub",
   },
 };
 
@@ -18,6 +19,12 @@ export const navItems: NavItem[] = [
     href: "/dashboard",
     icon: LayoutDashboard,
     description: "View your points and activity.",
+  },
+  {
+    title: "Job Board",
+    href: "/job-board",
+    icon: ClipboardList,
+    description: "Find babysitting opportunities.",
   },
   {
     title: "Log Session",
@@ -53,6 +60,6 @@ export const publicNavItems: NavItem[] = [
     title: "Sign Up",
     href: "/referral-signup",
     icon: UserPlus,
-    description: "Join Babysitter Hub.", // Updated text
+    description: "Join Babysitter Hub.",
   },
 ];

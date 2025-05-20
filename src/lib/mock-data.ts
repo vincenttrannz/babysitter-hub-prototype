@@ -1,4 +1,5 @@
-import type { Session, Transaction, User } from '@/types';
+
+import type { Session, Transaction, User, JobPosting } from '@/types';
 
 export const mockUser: User = {
   id: 'user1',
@@ -51,7 +52,7 @@ export const mockSessions: Session[] = [
     babysitterName: 'Alice Wonderland',
     parentId: 'user3',
     parentName: 'Charlie Brown',
-    points: 8, // 2 half-hours before midnight (2*1) + 2 half-hours after midnight (2*2) = 2+4 = 6. Oh, 3 hours total. (2x1pt) + (4x2pts) = 2+8=10. My example was 11pm-1am. This is 10pm-1am, so 4 half-hours before midnight, 2 after. (4*1) + (2*2) = 4+4 = 8.
+    points: 8, 
     status: 'confirmed',
     createdAt: new Date(2024, 6, 18, 1, 5),
     updatedAt: new Date(2024, 6, 18, 1, 10),
@@ -66,7 +67,7 @@ export const mockSessions: Session[] = [
     parentId: 'user1',
     parentName: 'Alice Wonderland',
     points: 6,
-    status: 'pending_parent', // Alice (parent) needs to confirm
+    status: 'pending_parent', 
     notes: 'Morning playdate.',
     createdAt: new Date(2024, 6, 20, 12, 5),
     updatedAt: new Date(2024, 6, 20, 12, 5),
@@ -81,7 +82,7 @@ export const mockSessions: Session[] = [
     parentId: 'user2',
     parentName: 'Bob The Builder',
     points: 2,
-    status: 'pending_babysitter', // Alice (babysitter) needs to confirm (Bob logged it)
+    status: 'pending_babysitter', 
     createdAt: new Date(2024, 6, 22, 20, 5),
     updatedAt: new Date(2024, 6, 22, 20, 5),
   },
@@ -115,8 +116,53 @@ export const mockTransactions: Transaction[] = [
     id: 'tx4',
     date: new Date(2024, 6, 20),
     description: 'Childcare by Diana Prince (Pending)',
-    points: -6, // This would only reflect after confirmation
+    points: -6, 
     type: 'spent', 
     sessionId: 'session3',
+  },
+];
+
+export const mockJobPostings: JobPosting[] = [
+  {
+    id: 'job1',
+    requestingParentId: 'user3', // Charlie Brown
+    requestingParentName: 'Charlie Brown',
+    requestingParentAvatar: 'https://placehold.co/100x100.png?text=CB',
+    date: new Date(new Date().setDate(new Date().getDate() + 3)), // 3 days from now
+    startTime: '17:00',
+    endTime: '20:00',
+    numberOfChildren: 2,
+    childrenAgeRange: '4 and 7 years',
+    notes: 'Need a sitter for a dinner engagement. Kids are easygoing, love board games!',
+    status: 'open',
+    createdAt: new Date(new Date().setDate(new Date().getDate() - 1)), // Posted yesterday
+  },
+  {
+    id: 'job2',
+    requestingParentId: 'user4', // Diana Prince
+    requestingParentName: 'Diana Prince',
+    requestingParentAvatar: 'https://placehold.co/100x100.png?text=DP',
+    date: new Date(new Date().setDate(new Date().getDate() + 5)), // 5 days from now
+    startTime: '09:00',
+    endTime: '13:00',
+    numberOfChildren: 1,
+    childrenAgeRange: '3 years',
+    notes: 'Looking for someone to help out on a Saturday morning. My little one enjoys arts and crafts.',
+    status: 'open',
+    createdAt: new Date(),
+  },
+  {
+    id: 'job3',
+    requestingParentId: 'user1', // Alice Wonderland
+    requestingParentName: 'Alice Wonderland',
+    requestingParentAvatar: 'https://placehold.co/100x100.png',
+    date: new Date(new Date().setDate(new Date().getDate() + 7)), // A week from now
+    startTime: '19:30',
+    endTime: '22:30',
+    numberOfChildren: 1,
+    childrenAgeRange: '5 years',
+    notes: 'Urgent: Sitter needed for next Friday evening. Includes bedtime routine.',
+    status: 'open',
+    createdAt: new Date(),
   },
 ];
