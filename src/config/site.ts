@@ -13,6 +13,7 @@ export const siteConfig = {
   },
 };
 
+// Nav groups common to all authenticated users
 export const navItemGroups: NavItemGroup[] = [
   {
     items: [
@@ -60,27 +61,31 @@ export const navItemGroups: NavItemGroup[] = [
   },
 ];
 
-export const adminNavItemGroups: NavItemGroup[] = [
+// Base items for the "General" group, visible to all users
+export const generalGroupBase: NavItemGroup = {
+  groupTitle: "General",
+  items: [
+    {
+      title: "Members",
+      href: "/members",
+      icon: Users,
+      description: "View group members.",
+    },
+  ],
+};
+
+// Items to be added to the "General" group for admins only
+export const adminOnlyGeneralItems: NavItem[] = [
   {
-    groupTitle: "Admin",
-    items: [
-      {
-        title: "Admin Panel",
-        href: "/admin",
-        icon: ShieldCheck,
-        description: "Manage members and settings.",
-      },
-      {
-        title: "Members",
-        href: "/members",
-        icon: Users,
-        description: "View group members.",
-      },
-    ],
+    title: "Admin Panel",
+    href: "/admin",
+    icon: ShieldCheck,
+    description: "Manage members and settings.",
   },
 ];
 
-export const publicNavItems: NavItem[] = [ // Keeping this as NavItem[] if it's used differently
+// Public navigation items (e.g., for landing page, sign-up)
+export const publicNavItems: NavItem[] = [
    {
     title: "Sign Up",
     href: "/referral-signup",

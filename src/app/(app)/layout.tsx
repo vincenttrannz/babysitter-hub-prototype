@@ -14,18 +14,28 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { AppHeader } from '@/components/layout/app-header';
 import { SidebarNav } from '@/components/layout/sidebar-nav';
-import { navItemGroups, adminNavItemGroups } from '@/config/site'; // Updated import
+import { navItemGroups, generalGroupBase, adminOnlyGeneralItems } from '@/config/site';
 import Link from 'next/link';
 import { mockAdminUser } from '@/lib/mock-data';
-import type { NavItemGroup } from '@/types'; // Import NavItemGroup
+import type { NavItemGroup } from '@/types';
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   const currentUser = mockAdminUser;
   const isAdmin = currentUser.isAdmin ?? false;
   
-  const allNavGroups: NavItemGroup[] = isAdmin 
-    ? [...navItemGroups, ...adminNavItemGroups] 
-    : navItemGroups;
+  const allNavGroups: NavItemGroup[] = [...navItemGroups];
+
+  // Construct the General group based on admin status
+  const currentGeneralGroup: NavItemGroup = {
+    ...generalGroupBase, // Get title "General"
+    items: [...generalGroupBase.items], // Start with common items like "Members"
+  };
+
+  if (isAdmin) {
+    // Add admin-specific items to the beginning of the "General" group's items
+    currentGeneralGroup.items.unshift(...adminOnlyGeneralItems);
+  }
+  allNavGroups.push(currentGeneralGroup);
 
   return (
     <SidebarProvider open={true} defaultOpen={true}>
@@ -40,7 +50,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         </SidebarHeader>
         <Separator className="bg-sidebar-border" />
         <SidebarContent className="p-2">
-          <SidebarNav itemGroups={allNavGroups} /> {/* Changed prop name */}
+          <SidebarNav itemGroups={allNavGroups} />
         </SidebarContent>
         <Separator className="bg-sidebar-border" />
         <SidebarFooter className="p-4">
