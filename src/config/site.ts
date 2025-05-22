@@ -58,16 +58,6 @@ export const navItemGroups: NavItemGroup[] = [
       },
     ],
   },
-  {
-    items: [
-      {
-        title: "Members",
-        href: "/members",
-        icon: Users,
-        description: "View group members.",
-      },
-    ],
-  },
 ];
 
 export const adminNavItemGroups: NavItemGroup[] = [
@@ -79,6 +69,12 @@ export const adminNavItemGroups: NavItemGroup[] = [
         href: "/admin",
         icon: ShieldCheck,
         description: "Manage members and settings.",
+      },
+      {
+        title: "Members",
+        href: "/members",
+        icon: Users,
+        description: "View group members.",
       },
     ],
   },
