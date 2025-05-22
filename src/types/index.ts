@@ -54,6 +54,11 @@ export interface NavItem {
   description?: string;
 }
 
+export interface NavItemGroup {
+  groupTitle?: string;
+  items: NavItem[];
+}
+
 export interface JobPosting {
   id: string;
   requestingParentId: string;

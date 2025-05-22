@@ -1,7 +1,7 @@
 
 'use client';
 import type { ReactNode } from 'react';
-import { Puzzle } from 'lucide-react'; // Changed from Baby to Puzzle
+import { Puzzle } from 'lucide-react';
 import {
   SidebarProvider,
   Sidebar,
@@ -9,27 +9,30 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarInset,
-  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { AppHeader } from '@/components/layout/app-header';
 import { SidebarNav } from '@/components/layout/sidebar-nav';
-import { navItems, adminNavItems } from '@/config/site';
+import { navItemGroups, adminNavItemGroups } from '@/config/site'; // Updated import
 import Link from 'next/link';
 import { mockAdminUser } from '@/lib/mock-data';
+import type { NavItemGroup } from '@/types'; // Import NavItemGroup
 
 export default function AppLayout({ children }: { children: ReactNode }) {
   const currentUser = mockAdminUser;
   const isAdmin = currentUser.isAdmin ?? false;
-  const allNavItems = isAdmin ? [...navItems, ...adminNavItems] : navItems;
+  
+  const allNavGroups: NavItemGroup[] = isAdmin 
+    ? [...navItemGroups, ...adminNavItemGroups] 
+    : navItemGroups;
 
   return (
     <SidebarProvider open={true} defaultOpen={true}>
       <Sidebar side="left" variant="sidebar" collapsible="icon" className="border-r">
         <SidebarHeader className="p-4">
           <Link href="/dashboard" className="flex items-center gap-2 text-lg font-semibold text-sidebar-foreground">
-            <Puzzle className="h-7 w-7 text-sidebar-primary" /> {/* Changed from Baby to Puzzle */}
+            <Puzzle className="h-7 w-7 text-sidebar-primary" />
             <span className="group-data-[state=expanded]:opacity-100 group-data-[state=collapsed]:opacity-0 transition-opacity duration-200">
               Babysitter Hub
             </span>
@@ -37,7 +40,7 @@ export default function AppLayout({ children }: { children: ReactNode }) {
         </SidebarHeader>
         <Separator className="bg-sidebar-border" />
         <SidebarContent className="p-2">
-          <SidebarNav items={allNavItems} />
+          <SidebarNav itemGroups={allNavGroups} /> {/* Changed prop name */}
         </SidebarContent>
         <Separator className="bg-sidebar-border" />
         <SidebarFooter className="p-4">

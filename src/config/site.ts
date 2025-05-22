@@ -1,6 +1,6 @@
 
-import type { NavItem } from '@/types';
-import { LayoutDashboard, CalendarPlus, ListChecks, ShieldCheck, UserPlus, Users, Puzzle, ClipboardList, PlusCircle } from 'lucide-react'; // Added Puzzle, ClipboardList, PlusCircle
+import type { NavItem, NavItemGroup } from '@/types';
+import { LayoutDashboard, CalendarPlus, ListChecks, ShieldCheck, UserPlus, Users, Puzzle, ClipboardList, PlusCircle } from 'lucide-react';
 
 export const siteConfig = {
   name: "Babysitter Hub",
@@ -13,55 +13,78 @@ export const siteConfig = {
   },
 };
 
-export const navItems: NavItem[] = [
+export const navItemGroups: NavItemGroup[] = [
   {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-    description: "View your points and activity.",
+    items: [
+      {
+        title: "Dashboard",
+        href: "/dashboard",
+        icon: LayoutDashboard,
+        description: "View your points and activity.",
+      },
+    ],
   },
   {
-    title: "Job Board",
-    href: "/job-board",
-    icon: ClipboardList,
-    description: "Find babysitting opportunities.",
+    groupTitle: "Jobs",
+    items: [
+      {
+        title: "Job Board",
+        href: "/job-board",
+        icon: ClipboardList,
+        description: "Find babysitting opportunities.",
+      },
+      {
+        title: "Create Job Posting",
+        href: "/create-job",
+        icon: PlusCircle,
+        description: "Post a new babysitting request.",
+      },
+    ],
   },
   {
-    title: "Create Job Posting",
-    href: "/create-job",
-    icon: PlusCircle,
-    description: "Post a new babysitting request.",
+    groupTitle: "Sessions",
+    items: [
+      {
+        title: "Log Session",
+        href: "/log-session",
+        icon: CalendarPlus,
+        description: "Log a new babysitting session.",
+      },
+      {
+        title: "Confirm Sessions",
+        href: "/confirm-sessions",
+        icon: ListChecks,
+        description: "Confirm pending sessions.",
+      },
+    ],
   },
   {
-    title: "Log Session",
-    href: "/log-session",
-    icon: CalendarPlus,
-    description: "Log a new babysitting session.",
-  },
-  {
-    title: "Confirm Sessions",
-    href: "/confirm-sessions",
-    icon: ListChecks,
-    description: "Confirm pending sessions.",
-  },
-  {
-    title: "Members",
-    href: "/members",
-    icon: Users,
-    description: "View group members.",
+    items: [
+      {
+        title: "Members",
+        href: "/members",
+        icon: Users,
+        description: "View group members.",
+      },
+    ],
   },
 ];
 
-export const adminNavItems: NavItem[] = [
+export const adminNavItemGroups: NavItemGroup[] = [
   {
-    title: "Admin Panel",
-    href: "/admin",
-    icon: ShieldCheck,
-    description: "Manage members and settings.",
+    groupTitle: "Admin",
+    items: [
+      {
+        title: "Admin Panel",
+        href: "/admin",
+        icon: ShieldCheck,
+        description: "Manage members and settings.",
+      },
+    ],
   },
 ];
 
-export const publicNavItems: NavItem[] = [
+export const publicNavItems: NavItem[] = [ // Keeping this as NavItem[] if it's used differently
    {
     title: "Sign Up",
     href: "/referral-signup",
