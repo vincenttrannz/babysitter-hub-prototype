@@ -19,7 +19,8 @@ import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { Puzzle, CheckCircle, ShieldAlert } from 'lucide-react';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+// Removed useRouter as we will use Link for navigation to login
+// import { useRouter } from 'next/navigation';
 
 const verifyCodeFormSchema = z.object({
   code: z.string().length(6, { message: "Verification code must be 6 digits." }).regex(/^\d{6}$/, { message: "Code must be numeric." }),
@@ -38,8 +39,9 @@ type ResetPasswordFormValues = z.infer<typeof resetPasswordFormSchema>;
 
 export default function ResetPasswordPage() {
   const { toast } = useToast();
-  const router = useRouter();
+  // const router = useRouter(); // No longer needed for direct navigation here
   const [codeVerified, setCodeVerified] = useState(false);
+  const [passwordResetSuccess, setPasswordResetSuccess] = useState(false);
 
   const verifyCodeForm = useForm<VerifyCodeFormValues>({
     resolver: zodResolver(verifyCodeFormSchema),
@@ -71,12 +73,13 @@ export default function ResetPasswordPage() {
     console.log("New Password Data:", data);
     toast({
       title: 'Password Reset Successful (Mock)',
-      description: 'Your password has been updated. Please log in with your new password.',
+      description: 'Your password has been updated. You can now log in with your new password.',
     });
     resetPasswordForm.reset();
     verifyCodeForm.reset(); 
-    setCodeVerified(false); 
-    router.push('/login');
+    // setCodeVerified(false); // Keep codeVerified true to not revert to code entry
+    setPasswordResetSuccess(true); // Set success state
+    // router.push('/login'); // Removed direct navigation
   }
 
   return (
@@ -86,7 +89,24 @@ export default function ResetPasswordPage() {
         <span>Babysitter Hub</span>
       </Link>
       <Card className="w-full max-w-md shadow-xl">
-        {!codeVerified ? (
+        {passwordResetSuccess ? (
+          <>
+            <CardHeader className="text-center">
+              <CheckCircle className="mx-auto h-12 w-12 text-green-500 mb-2" />
+              <CardTitle className="text-2xl font-bold text-primary">Password Reset Successful!</CardTitle>
+              <CardDescription>
+                Your password has been successfully updated.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-center">
+              <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+                <Link href="/login">
+                  Go to Login
+                </Link>
+              </Button>
+            </CardContent>
+          </>
+        ) : !codeVerified ? (
           <>
             <CardHeader className="text-center">
               <ShieldAlert className="mx-auto h-12 w-12 text-primary mb-2" />
@@ -121,7 +141,8 @@ export default function ResetPasswordPage() {
         ) : (
           <>
             <CardHeader className="text-center">
-              <CheckCircle className="mx-auto h-12 w-12 text-green-500 mb-2" />
+              {/* Using a different icon for this step could be an option, but CheckCircle still works for "ready to reset" */}
+              <ShieldAlert className="mx-auto h-12 w-12 text-primary mb-2" /> 
               <CardTitle className="text-2xl font-bold text-primary">Reset Your Password</CardTitle>
               <CardDescription>
                 Please enter your new password below.
@@ -157,7 +178,7 @@ export default function ResetPasswordPage() {
                     )}
                   />
                   <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                    Reset Password & Log In
+                    Reset Password
                   </Button>
                 </form>
               </Form>
