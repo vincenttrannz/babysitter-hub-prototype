@@ -1,13 +1,14 @@
 
 'use client';
 
+import Link from 'next/link';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { mockJobPostings } from "@/lib/mock-data";
 import type { JobPosting } from "@/types";
 import { format } from 'date-fns';
-import { ClipboardList, CalendarDays, Clock, Users as UsersIcon, MessageSquare, CheckCircle } from "lucide-react";
+import { ClipboardList, CalendarDays, Clock, Users as UsersIcon, MessageSquare, CheckCircle, PlusCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function JobBoardPage() {
@@ -25,21 +26,29 @@ export default function JobBoardPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-primary flex items-center">
-          <ClipboardList className="h-8 w-8 mr-2" />
-          Job Board
-        </h1>
-        <p className="text-muted-foreground">
-          Find open babysitting requests from other members in your community.
-        </p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-primary flex items-center">
+            <ClipboardList className="h-8 w-8 mr-2" />
+            Job Board
+          </h1>
+          <p className="text-muted-foreground">
+            Find open babysitting requests from other members in your community.
+          </p>
+        </div>
+        <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
+          <Link href="/create-job">
+            <PlusCircle className="mr-2 h-5 w-5" />
+            Create Job Posting
+          </Link>
+        </Button>
       </div>
 
       {openJobs.length === 0 ? (
         <div className="flex flex-col items-center justify-center text-center p-8 border-2 border-dashed rounded-lg bg-card">
           <ClipboardList className="h-12 w-12 text-muted-foreground mb-4" />
           <h2 className="text-xl font-semibold text-card-foreground">No Open Jobs</h2>
-          <p className="text-muted-foreground">There are currently no open babysitting requests. Check back later!</p>
+          <p className="text-muted-foreground">There are currently no open babysitting requests. Check back later or create one!</p>
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
