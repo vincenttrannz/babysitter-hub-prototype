@@ -19,8 +19,6 @@ import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { Puzzle, CheckCircle, ShieldAlert } from 'lucide-react';
 import { useState } from 'react';
-// Removed useRouter as we will use Link for navigation to login
-// import { useRouter } from 'next/navigation';
 
 const verifyCodeFormSchema = z.object({
   code: z.string().length(6, { message: "Verification code must be 6 digits." }).regex(/^\d{6}$/, { message: "Code must be numeric." }),
@@ -39,7 +37,6 @@ type ResetPasswordFormValues = z.infer<typeof resetPasswordFormSchema>;
 
 export default function ResetPasswordPage() {
   const { toast } = useToast();
-  // const router = useRouter(); // No longer needed for direct navigation here
   const [codeVerified, setCodeVerified] = useState(false);
   const [passwordResetSuccess, setPasswordResetSuccess] = useState(false);
 
@@ -77,9 +74,7 @@ export default function ResetPasswordPage() {
     });
     resetPasswordForm.reset();
     verifyCodeForm.reset(); 
-    // setCodeVerified(false); // Keep codeVerified true to not revert to code entry
     setPasswordResetSuccess(true); // Set success state
-    // router.push('/login'); // Removed direct navigation
   }
 
   return (
@@ -141,7 +136,6 @@ export default function ResetPasswordPage() {
         ) : (
           <>
             <CardHeader className="text-center">
-              {/* Using a different icon for this step could be an option, but CheckCircle still works for "ready to reset" */}
               <ShieldAlert className="mx-auto h-12 w-12 text-primary mb-2" /> 
               <CardTitle className="text-2xl font-bold text-primary">Reset Your Password</CardTitle>
               <CardDescription>
@@ -158,7 +152,12 @@ export default function ResetPasswordPage() {
                       <FormItem>
                         <FormLabel>New Password</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="••••••••" {...field} />
+                          <Input
+                            type="password"
+                            placeholder="Enter your new password"
+                            {...field}
+                            disabled={false} 
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -171,7 +170,7 @@ export default function ResetPasswordPage() {
                       <FormItem>
                         <FormLabel>Confirm New Password</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="••••••••" {...field} />
+                          <Input type="password" placeholder="Re-enter your new password" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
