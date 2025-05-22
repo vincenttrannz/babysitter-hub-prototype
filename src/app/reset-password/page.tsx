@@ -63,6 +63,7 @@ export default function ResetPasswordPage() {
       description: 'You can now reset your password.',
       action: <CheckCircle className="h-5 w-5 text-green-500" />,
     });
+    resetPasswordForm.reset(); // Explicitly reset the new password form
     setCodeVerified(true);
   }
 
@@ -120,7 +121,7 @@ export default function ResetPasswordPage() {
                       <FormItem>
                         <FormLabel>Verification Code</FormLabel>
                         <FormControl>
-                          <Input type="text" placeholder="123456" {...field} maxLength={6} />
+                          <Input type="text" placeholder="123456" {...field} maxLength={6} autoComplete="one-time-code" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -155,8 +156,8 @@ export default function ResetPasswordPage() {
                           <Input
                             type="password"
                             placeholder="Enter your new password"
+                            autoComplete="new-password"
                             {...field}
-                            disabled={false} 
                           />
                         </FormControl>
                         <FormMessage />
@@ -170,7 +171,7 @@ export default function ResetPasswordPage() {
                       <FormItem>
                         <FormLabel>Confirm New Password</FormLabel>
                         <FormControl>
-                          <Input type="password" placeholder="Re-enter your new password" {...field} />
+                          <Input type="password" placeholder="Re-enter your new password" autoComplete="new-password" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
