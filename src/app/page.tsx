@@ -12,7 +12,7 @@ export default function HomePage() {
           <Puzzle className="h-7 w-7" />
           <span className="text-xl font-bold">Babysitter Hub</span>
         </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
+        <nav className="ml-auto flex items-center gap-4 sm:gap-6">
           <Link href="#features" className="text-sm font-medium hover:underline underline-offset-4">
             Features
           </Link>
@@ -28,7 +28,7 @@ export default function HomePage() {
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-secondary">
           <div className="container px-4 md:px-6">
             <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-              <div className="flex flex-col justify-center space-y-4">
+              <div className="container flex flex-col justify-center space-y-4">
                 <div className="space-y-2">
                   <h1 className="text-3xl font-bold text-primary sm:text-5xl xl:text-6xl/none">
                     Childcare Exchange Made Easy
@@ -47,7 +47,7 @@ export default function HomePage() {
                 </div>
               </div>
               <Image
-                src="https://storage.googleapis.com/appengine-sdg-sandbox-resources/image_97a38030277a71ae51579d670c010739.png"
+                src="https://firebasestorage.googleapis.com/v0/b/babysitter-hub.firebasestorage.app/o/home_page_banner.png?alt=media&token=3e682025-cb8e-436e-b183-cc9a82d2419a"
                 alt="Illustration of a caregiver and child"
                 data-ai-hint="caregiver child"
                 width={600}
@@ -113,17 +113,17 @@ export default function HomePage() {
             <div className="mx-auto w-full max-w-4xl space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div className="flex flex-col items-center space-y-2 p-4 rounded-lg bg-card shadow-md">
-                        <div className="p-3 rounded-full bg-accent text-accent-foreground">1</div>
+                        <div className="p-3 leading-[0.5] rounded-full bg-accent text-accent-foreground">1</div>
                         <h3 className="font-semibold text-card-foreground">Get Referred</h3>
                         <p className="text-sm text-muted-foreground">New members join via a referral from an existing member.</p>
                     </div>
                     <div className="flex flex-col items-center space-y-2 p-4 rounded-lg bg-card shadow-md">
-                        <div className="p-3 rounded-full bg-accent text-accent-foreground">2</div>
+                        <div className="p-3 leading-[0.5] rounded-full bg-accent text-accent-foreground">2</div>
                         <h3 className="font-semibold text-card-foreground">Offer or Request Care</h3>
                         <p className="text-sm text-muted-foreground">Use group messaging to arrange babysitting sessions.</p>
                     </div>
                     <div className="flex flex-col items-center space-y-2 p-4 rounded-lg bg-card shadow-md">
-                        <div className="p-3 rounded-full bg-accent text-accent-foreground">3</div>
+                        <div className="p-3 leading-[0.5] rounded-full bg-accent text-accent-foreground">3</div>
                         <h3 className="font-semibold text-card-foreground">Log & Confirm</h3>
                         <p className="text-sm text-muted-foreground">Log sessions and confirm them. Points are auto-calculated.</p>
                     </div>
