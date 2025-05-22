@@ -18,7 +18,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { Puzzle, CheckCircle, ShieldAlert } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Imported useEffect
 
 const verifyCodeFormSchema = z.object({
   code: z.string().length(6, { message: "Verification code must be 6 digits." }).regex(/^\d{6}$/, { message: "Code must be numeric." }),
@@ -55,6 +55,16 @@ export default function ResetPasswordPage() {
     },
   });
 
+  useEffect(() => {
+    if (codeVerified && !passwordResetSuccess) {
+      // Explicitly clear password fields when the form becomes visible
+      // This helps override aggressive browser autofill
+      resetPasswordForm.setValue('newPassword', '');
+      resetPasswordForm.setValue('confirmPassword', '');
+      resetPasswordForm.clearErrors(); // Clear any potential stale errors
+    }
+  }, [codeVerified, passwordResetSuccess, resetPasswordForm]);
+
   function onVerifyCodeSubmit(data: VerifyCodeFormValues) {
     console.log("Verification Code Data:", data);
     // Mock verification success
@@ -63,7 +73,7 @@ export default function ResetPasswordPage() {
       description: 'You can now reset your password.',
       action: <CheckCircle className="h-5 w-5 text-green-500" />,
     });
-    resetPasswordForm.reset(); // Explicitly reset the new password form
+    resetPasswordForm.reset(); // Reset to default values before showing
     setCodeVerified(true);
   }
 
@@ -75,7 +85,7 @@ export default function ResetPasswordPage() {
     });
     resetPasswordForm.reset();
     verifyCodeForm.reset(); 
-    setPasswordResetSuccess(true); // Set success state
+    setPasswordResetSuccess(true);
   }
 
   return (
