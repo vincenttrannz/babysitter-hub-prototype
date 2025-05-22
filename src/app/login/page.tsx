@@ -113,7 +113,7 @@ export default function LoginPage() {
                     </FormControl>
                     <div className="text-right">
                         <Button variant="link" asChild className="text-sm text-primary p-0 h-auto font-normal">
-                            <Link href="#">Forgot Password?</Link>
+                            <Link href="/forgot-password">Forgot Password?</Link>
                         </Button>
                     </div>
                     <FormMessage />
@@ -126,7 +126,7 @@ export default function LoginPage() {
             </form>
           </Form>
 
-          <div className="my-6 flex items-center">
+          <div className="w-full my-6 flex items-center">
             <Separator className="flex-grow" />
             <span className="mx-4 text-xs text-muted-foreground">OR</span>
             <Separator className="flex-grow" />
@@ -154,5 +154,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-    
