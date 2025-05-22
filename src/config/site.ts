@@ -1,6 +1,6 @@
 
 import type { NavItem } from '@/types';
-import { LayoutDashboard, CalendarPlus, ListChecks, ShieldCheck, UserPlus, Users, Puzzle, ClipboardList } from 'lucide-react'; // Added Puzzle, ClipboardList
+import { LayoutDashboard, CalendarPlus, ListChecks, ShieldCheck, UserPlus, Users, Puzzle, ClipboardList, PlusCircle } from 'lucide-react'; // Added Puzzle, ClipboardList, PlusCircle
 
 export const siteConfig = {
   name: "Babysitter Hub",
@@ -25,6 +25,12 @@ export const navItems: NavItem[] = [
     href: "/job-board",
     icon: ClipboardList,
     description: "Find babysitting opportunities.",
+  },
+  {
+    title: "Create Job Posting",
+    href: "/create-job",
+    icon: PlusCircle,
+    description: "Post a new babysitting request.",
   },
   {
     title: "Log Session",
