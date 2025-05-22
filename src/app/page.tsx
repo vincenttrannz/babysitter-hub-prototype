@@ -20,7 +20,7 @@ export default function HomePage() {
             How It Works
           </Link>
           <Button asChild variant="secondary" className="text-primary hover:bg-accent hover:text-accent-foreground">
-            <Link href="/dashboard">Login / Get Started</Link>
+            <Link href="/login">Login / Get Started</Link>
           </Button>
         </nav>
       </header>
@@ -62,7 +62,7 @@ export default function HomePage() {
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
                 <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm text-muted-foreground">Key Features</div>
-                <h2 className="text-3xl font-bold tracking-tighter text-primary sm:text-5xl">Everything You Need for Fair Childcare Exchange</h2>
+                <h2 className="text-3xl font-bold text-primary sm:text-5xl">Everything You Need for Fair Childcare Exchange</h2>
                 <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                   Our platform provides all the tools for a seamless and trustworthy babysitting cooperative.
                 </p>
@@ -105,7 +105,7 @@ export default function HomePage() {
         <section id="how-it-works" className="w-full py-12 md:py-24 lg:py-32 bg-secondary">
           <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
             <div className="space-y-3">
-              <h2 className="text-3xl font-bold tracking-tighter text-primary md:text-4xl/tight">How Babysitter Hub Works</h2>
+              <h2 className="text-3xl font-bold text-primary md:text-4xl/tight">How Babysitter Hub Works</h2>
               <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
                 Simple steps to join and participate in our childcare exchange community. New members start with 10 points!
               </p>
@@ -146,3 +146,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+    
