@@ -21,8 +21,7 @@ services:
       - "traefik.http.routers.babysitter_hub_nginx.entrypoints=http,https"
     command: "/bin/sh -c 'sleep 5 && while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     depends_on:
-      frontend:
-        condition: service_healthy
+      - frontend
 
   frontend:
     container_name: babysitter_hub_frontend
