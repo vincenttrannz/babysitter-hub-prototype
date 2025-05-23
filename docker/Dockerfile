@@ -1,4 +1,4 @@
-from node:20 as base
+FROM node:20 AS base
 
 ENV PORT=3000 \
     APP_HOME=/app \
@@ -12,20 +12,22 @@ RUN npm ci
 COPY . .
 
 # Development
-FROM base as development
+FROM base AS development
+ENV NODE_ENV=development
 EXPOSE ${PORT}
 CMD [ "npm", "run", "dev" ]
 
 # Builder
-FROM base as build_nextjs
-ENV NEXT_TELEMETRY_DISABLED 1
+FROM base AS build_nextjs
+ENV NEXT_TELEMETRY_DISABLED=1
 COPY --chown=node:node ../ ./
 RUN NODE_ENV="production" \
     npm run build
 
 # Production
-FROM build_nextjs as production
-ENV NODE_ENV production \
-    PORT 3000
+FROM build_nextjs AS production
+ENV NODE_ENV=production \
+    PORT=3000 \
+    NEXT_TELEMETRY_DISABLED=1
 CMD [ "npm", "run", "start" ]
 EXPOSE ${PORT}

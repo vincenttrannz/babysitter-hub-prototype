@@ -7,7 +7,7 @@ services:
       - "3001:80"
     volumes:
       - ./public:/app/public
-      - ./conf/production/nginx/:/etc/nginx:ro
+      - ./conf/development/nginx/:/etc/nginx:ro
       - ./logs/nginx/:/var/log/nginx
       - /etc/localtime:/etc/localtime:ro
     networks:
@@ -16,12 +16,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.babysitter_hub_nginx.service=babysitter_hub_nginx"
-      - "traefik.http.routers.babysitter_hub_nginx.rule=Host(`babysitterhub.popthat.nz`)"
+      - "traefik.http.routers.nbabysitter_hub_ginx.rule=Host(`babysitter-hub.localhost`)"
       - "traefik.http.services.babysitter_hub_nginx.loadbalancer.server.port=80"
       - "traefik.http.routers.babysitter_hub_nginx.entrypoints=http,https"
-      # TLS
-      - "traefik.http.routers.babysitter_hub_nginx.tls=true"
-      - "traefik.http.routers.babysitter_hub_nginx.tls.certresolver=myresolver"
     command: "/bin/sh -c 'sleep 5 && while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     depends_on:
       frontend:
@@ -33,8 +30,8 @@ services:
       context: .
       dockerfile: ./docker/Dockerfile
       args:
-        - NODE_ENV=production
-      target: production
+        - NODE_ENV=development
+      target: development
     restart: unless-stopped
     networks:
       - internal
@@ -51,6 +48,27 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  # postgres:
+  #   image: postgres:12.0-alpine
+  #   container_name: babysitter_hub_postgres
+  #   platform: linux/amd64
+  #   restart: unless-stopped
+  #   env_file: .env
+  #   environment:
+  #     POSTGRES_USER: ${DATABASE_USERNAME}
+  #     POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+  #     POSTGRES_DB: ${DATABASE_NAME}
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data/
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}'"]
+  #     interval: 10s
+  #     retries: 3
+  #     timeout: 3s
+
+volumes:
+  postgres-data:
 
 networks:
   internal:
