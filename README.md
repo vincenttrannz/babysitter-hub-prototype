@@ -1,4 +1,4 @@
-# Firebase Studio
+# Babysitter Hub Prototype - Firebase Studio
 
 This is a NextJS starter in Firebase Studio.
 
