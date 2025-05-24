@@ -3,6 +3,7 @@ services:
     image: nginx:latest
     restart: unless-stopped
     container_name: babysitter_hub_nginx
+    env_file: .env
     ports:
       - "3001:80"
     volumes:
@@ -27,18 +28,21 @@ services:
       - frontend
 
   frontend:
-    container_name: babysitter_hub_frontend
+    container_name: ${PROJECT_NAME}_frontend
     build:
       context: .
       dockerfile: ./docker/Dockerfile
       args:
         - NODE_ENV=production
+        - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+        - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
       target: production
     restart: unless-stopped
     networks:
       - internal
     ports:
       - "3000:3000"
+    env_file: .env
     volumes:
       - ./:/app
       - /app/node_modules

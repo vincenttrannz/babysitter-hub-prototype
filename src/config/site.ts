@@ -88,7 +88,7 @@ export const adminOnlyGeneralItems: NavItem[] = [
 export const publicNavItems: NavItem[] = [
    {
     title: "Sign Up",
-    href: "/referral-signup",
+    href: "/signup",
     icon: UserPlus,
     description: "Join Babysitter Hub.",
   },

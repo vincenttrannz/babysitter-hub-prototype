@@ -2,7 +2,8 @@ services:
   nginx:
     image: nginx:latest
     restart: unless-stopped
-    container_name: babysitter_hub_nginx
+    container_name: ${PROJECT_NAME}_nginx
+    env_file: .env
     ports:
       - "3001:80"
     volumes:
@@ -24,18 +25,24 @@ services:
       - frontend
 
   frontend:
-    container_name: babysitter_hub_frontend
+    container_name: ${PROJECT_NAME}_frontend
     build:
       context: .
       dockerfile: ./docker/Dockerfile
       args:
         - NODE_ENV=development
+        - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+        - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
       target: development
     restart: unless-stopped
+    stdin_open: true
+    tty: true
+    command: sh
     networks:
       - internal
     ports:
       - "3000:3000"
+    env_file: .env
     volumes:
       - ./:/app
       - /app/node_modules
@@ -47,27 +54,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
-  # postgres:
-  #   image: postgres:12.0-alpine
-  #   container_name: babysitter_hub_postgres
-  #   platform: linux/amd64
-  #   restart: unless-stopped
-  #   env_file: .env
-  #   environment:
-  #     POSTGRES_USER: ${DATABASE_USERNAME}
-  #     POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-  #     POSTGRES_DB: ${DATABASE_NAME}
-  #   volumes:
-  #     - postgres-data:/var/lib/postgresql/data/
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "sh -c 'pg_isready -U ${DATABASE_USERNAME} -d ${DATABASE_NAME}'"]
-  #     interval: 10s
-  #     retries: 3
-  #     timeout: 3s
-
-volumes:
-  postgres-data:
 
 networks:
   internal:

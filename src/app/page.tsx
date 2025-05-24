@@ -39,7 +39,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row">
                   <Button asChild size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90">
-                    <Link href="/referral-signup">Join or Start a Hub</Link>
+                    <Link href="/signup">Join or Start a Hub</Link>
                   </Button>
                   <Button asChild variant="outline" size="lg" className="border-primary text-primary hover:bg-primary/10">
                     <Link href="#how-it-works">Learn More</Link>
