@@ -1,4 +1,3 @@
-
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -20,6 +19,9 @@ import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { Puzzle } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { createClient } from '@/api/client';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 // Simple SVG for Google Icon
 const GoogleIcon = () => (
@@ -58,11 +60,17 @@ type SignupFormValues = z.infer<typeof SignupFormSchema>;
 
 export default function SignupPage() {
   const { toast } = useToast();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+  const supabase = createClient();
+
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(SignupFormSchema),
     defaultValues: {
       fullName: '',
       email: '',
+      phone: '',
       password: '',
       confirmPassword: '',
       referrerEmail: '',
@@ -70,22 +78,110 @@ export default function SignupPage() {
     },
   });
 
-  function onSubmit(data: SignupFormValues) {
-    console.log(data);
-    // Mock submission
-    toast({
-      title: 'Sign Up Request Submitted (Mock)',
-      description: 'Your request to join has been sent. An admin will review it shortly.',
-    });
-    form.reset();
+  async function onSubmit(data: SignupFormValues) {
+    setIsLoading(true);
+    
+    try {
+      // Sign up with email/password
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            full_name: data.fullName,
+            phone: data.phone,
+            referrer_email: data.referrerEmail || null,
+            referral_code: data.referralCode || null,
+          }
+        }
+      });
+
+      if (authError) {
+        toast({
+          title: 'Error',
+          description: authError.message,
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      if (authData.user) {
+        // Create profile record
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert({
+            id: authData.user.id,
+            full_name: data.fullName,
+            referrer_email: data.referrerEmail || null,
+            referral_code: data.referralCode || null,
+          });
+
+        if (profileError) {
+          console.error('Profile creation error:', profileError);
+          // Don't show error to user as auth was successful
+        }
+
+        toast({
+          title: 'Account created successfully!',
+          description: 'Please check your email to verify your account.',
+        });
+        
+        form.reset();
+        // Optionally redirect to a confirmation page
+        // router.push('/confirm-email');
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }
 
-  const handleSocialSignup = (provider: string) => {
+  const handleGoogleSignup = async () => {
+    setIsGoogleLoading(true);
+    
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        }
+      });
+
+      if (error) {
+        toast({
+          title: 'Error',
+          description: error.message,
+          variant: 'destructive',
+        });
+      }
+      // Note: The redirect will happen automatically, so we don't need to handle success here
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to sign up with Google. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsGoogleLoading(false);
+    }
+  };
+
+  const handleFacebookSignup = () => {
     toast({
-        title: `Sign up with ${provider} (Mock)`,
-        description: `This would initiate ${provider} OAuth flow for registration.`,
+      title: 'Facebook Sign Up',
+      description: 'Facebook OAuth is not configured yet. Please use email signup or Google.',
+      variant: 'default',
     });
-  }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-secondary pt-12 px-6 pb-6">
@@ -102,11 +198,26 @@ export default function SignupPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3 mb-6">
-            <Button variant="outline" className="w-full" onClick={() => handleSocialSignup('Google')}>
-              <GoogleIcon /> Sign up with Google
+            <Button 
+              variant="outline" 
+              className="w-full" 
+              onClick={handleGoogleSignup}
+              disabled={isGoogleLoading}
+            >
+              {isGoogleLoading ? (
+                <div className="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent" />
+              ) : (
+                <GoogleIcon />
+              )}
+              {isGoogleLoading ? 'Signing up...' : 'Sign up with Google'}
             </Button>
-            <Button variant="outline" className="w-full" onClick={() => handleSocialSignup('Facebook')}>
-              <FacebookIcon /> Sign up with Facebook
+            <Button 
+              variant="outline" 
+              className="w-full" 
+              onClick={handleFacebookSignup}
+              disabled
+            >
+              <FacebookIcon /> Sign up with Facebook (Coming Soon)
             </Button>
           </div>
 
@@ -139,6 +250,19 @@ export default function SignupPage() {
                     <FormLabel>Email Address</FormLabel>
                     <FormControl>
                       <Input type="email" placeholder="you@example.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input type="phone" placeholder="022xxxxxx" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -199,8 +323,12 @@ export default function SignupPage() {
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-                Create Account
+              <Button 
+                type="submit" 
+                className="w-full bg-accent text-accent-foreground hover:bg-accent/90"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Creating Account...' : 'Create Account'}
               </Button>
             </form>
           </Form>
@@ -217,5 +345,3 @@ export default function SignupPage() {
     </div>
   );
 }
-
-    

@@ -1,0 +1,68 @@
+version: 3
+
+tasks:
+  docker-*:
+    desc: "Manage the docker container with args"
+    vars:
+      CMD: "{{index .MATCH 0}}"
+    silent: true
+    cmds:
+      - docker compose -f ./docker-compose.yml {{.CMD}} {{.CLI_ARGS}}
+  
+  frontend-*:
+    desc: "Manage the app container"
+    vars:
+      CMD: "{{index .MATCH 0}}"
+    silent: true
+    cmds:
+      - |
+        if [ "{{.CMD}}" = "dev" ]; then
+          docker compose exec frontend npm run dev
+        elif [ "{{.CMD}}" = "start" ]; then
+          docker compose exec frontend npm run start
+        elif [ "{{.CMD}}" = "build" ]; then
+          docker compose exec frontend npm run build
+        elif [ "{{.CMD}}" = "lint" ]; then
+          docker compose exec frontend npm run lint
+        else
+          echo "Unknown command: {{.CMD}}"
+          echo "Available commands: dev, start, build, lint"
+        fi
+
+  # Additional useful tasks
+  logs:
+    desc: "Show docker compose logs"
+    silent: true
+    cmds:
+      - docker compose logs -f
+
+  logs-frontend:
+    desc: "Show frontend container logs"
+    silent: true
+    cmds:
+      - docker compose logs -f frontend
+
+  shell:
+    desc: "Open shell in frontend container"
+    silent: true
+    cmds:
+      - docker compose exec frontend /bin/bash
+
+  clean:
+    desc: "Clean up docker resources"
+    silent: true
+    cmds:
+      - docker compose down
+      - docker system prune -f
+
+  restart:
+    desc: "Restart all services"
+    silent: true
+    cmds:
+      - docker compose restart
+
+  status:
+    desc: "Show container status"
+    silent: true
+    cmds:
+      - docker compose ps
