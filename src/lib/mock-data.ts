@@ -136,6 +136,7 @@ export const mockJobPostings: JobPosting[] = [
     notes: 'Need a sitter for a dinner engagement. Kids are easygoing, love board games!',
     status: 'open',
     createdAt: new Date(new Date().setDate(new Date().getDate() - 1)), // Posted yesterday
+    expressedInterests: [],
   },
   {
     id: 'job2',
@@ -150,10 +151,11 @@ export const mockJobPostings: JobPosting[] = [
     notes: 'Looking for someone to help out on a Saturday morning. My little one enjoys arts and crafts.',
     status: 'open',
     createdAt: new Date(),
+    expressedInterests: [],
   },
   {
     id: 'job3',
-    requestingParentId: 'user1', // Alice Wonderland
+    requestingParentId: 'user1', // Alice Wonderland - so mockUser owns this one
     requestingParentName: 'Alice Wonderland',
     requestingParentAvatar: 'https://placehold.co/100x100.png',
     date: new Date(new Date().setDate(new Date().getDate() + 7)), // A week from now
@@ -164,5 +166,7 @@ export const mockJobPostings: JobPosting[] = [
     notes: 'Urgent: Sitter needed for next Friday evening. Includes bedtime routine.',
     status: 'open',
     createdAt: new Date(),
+    expressedInterests: [],
   },
 ];
+

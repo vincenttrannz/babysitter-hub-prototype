@@ -59,6 +59,14 @@ export interface NavItemGroup {
   items: NavItem[];
 }
 
+export interface ExpressedInterest {
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  message: string;
+  timestamp: Date;
+}
+
 export interface JobPosting {
   id: string;
   requestingParentId: string;
@@ -72,4 +80,6 @@ export interface JobPosting {
   notes?: string;
   status: 'open' | 'filled' | 'expired'; // 'open' means available
   createdAt: Date;
+  expressedInterests?: ExpressedInterest[];
 }
+
