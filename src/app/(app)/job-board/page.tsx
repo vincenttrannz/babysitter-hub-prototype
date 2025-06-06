@@ -8,10 +8,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { mockJobPostings, mockUser } from "@/lib/mock-data";
 import type { JobPosting, ExpressedInterest } from "@/types";
 import { format } from 'date-fns';
-import { ClipboardList, CalendarDays, Clock, Users as UsersIcon, MessageSquare, CheckCircle, PlusCircle, Send, Info } from "lucide-react";
+import { ClipboardList, CalendarDays, Clock, Users as UsersIcon, MessageSquare, CheckCircle, PlusCircle, Send, Info, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from 'react';
 import { ExpressInterestDialog } from '@/components/job/express-interest-dialog';
+import { ViewInterestsDialog } from '@/components/job/view-interests-dialog'; // New Import
 
 export default function JobBoardPage() {
   const { toast } = useToast();
@@ -19,6 +20,7 @@ export default function JobBoardPage() {
     mockJobPostings.filter(job => job.status === 'open')
   );
   const [selectedJobForInterest, setSelectedJobForInterest] = useState<JobPosting | null>(null);
+  const [selectedJobForViewingInterests, setSelectedJobForViewingInterests] = useState<JobPosting | null>(null); // New state
 
   const currentUser = mockUser;
 
@@ -51,7 +53,6 @@ export default function JobBoardPage() {
       description: `Your message has been sent to ${jobToUpdate.requestingParentName}.`,
     });
     
-    // Mock notification for job owner
     if (jobToUpdate.requestingParentId !== currentUser.id) {
         toast({
             title: "New Job Interest (Mock Notification)",
@@ -59,12 +60,28 @@ export default function JobBoardPage() {
             duration: 5000, 
         });
     }
-    setSelectedJobForInterest(null); // Close dialog
+    setSelectedJobForInterest(null); 
   };
 
   const hasCurrentUserExpressedInterest = (job: JobPosting): boolean => {
     return !!job.expressedInterests?.some(interest => interest.userId === currentUser.id);
   };
+
+  const handleMarkAsFilled = (jobId: string) => {
+    setJobPostings(prevJobs => prevJobs.filter(job => job.id !== jobId)); // Remove from open list
+    const jobToUpdate = mockJobPostings.find(j => j.id === jobId); // Ideally update original source or backend
+    if(jobToUpdate) {
+        // This is a mock update for local state if we were showing all jobs
+        // For now, simply filtering from `jobPostings` (open jobs) is enough
+        console.log(`Mock: Job ${jobId} marked as filled. In a real app, update backend.`);
+    }
+    toast({
+      title: "Job Marked as Filled (Mock)",
+      description: "This job posting will no longer be listed as open.",
+    });
+    setSelectedJobForViewingInterests(null); // Close the dialog
+  };
+
 
   return (
     <div className="space-y-8">
@@ -97,6 +114,7 @@ export default function JobBoardPage() {
           {jobPostings.map((job) => {
             const alreadyExpressed = hasCurrentUserExpressedInterest(job);
             const isOwner = job.requestingParentId === currentUser.id;
+            const interestCount = job.expressedInterests?.length || 0;
 
             return (
             <Card key={job.id} className="shadow-lg flex flex-col">
@@ -134,11 +152,21 @@ export default function JobBoardPage() {
                     <p>{job.notes}</p>
                   </div>
                 )}
+                 {isOwner && interestCount > 0 && (
+                    <div className="text-sm text-accent font-semibold flex items-center gap-1">
+                        <UsersIcon className="h-4 w-4" />
+                        {interestCount} interest{interestCount > 1 ? 's' : ''} received
+                    </div>
+                 )}
               </CardContent>
               <CardFooter className="flex flex-col items-stretch gap-2">
                 {isOwner ? (
-                   <Button variant="outline" disabled className="w-full">
-                     <Info className="mr-2 h-4 w-4" /> This is your job posting
+                   <Button 
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => setSelectedJobForViewingInterests(job)}
+                  >
+                     <Eye className="mr-2 h-4 w-4" /> View Interests {interestCount > 0 ? `(${interestCount})` : ''}
                    </Button>
                 ) : alreadyExpressed ? (
                   <Button 
@@ -172,6 +200,17 @@ export default function JobBoardPage() {
           jobId={selectedJobForInterest.id}
           jobOwnerName={selectedJobForInterest.requestingParentName}
           onExpressInterestSubmit={handleExpressInterestSubmit}
+        />
+      )}
+
+      {selectedJobForViewingInterests && (
+        <ViewInterestsDialog
+            job={selectedJobForViewingInterests}
+            open={!!selectedJobForViewingInterests}
+            onOpenChange={(isOpen) => {
+                if (!isOpen) setSelectedJobForViewingInterests(null);
+            }}
+            onMarkAsFilled={handleMarkAsFilled}
         />
       )}
     </div>
