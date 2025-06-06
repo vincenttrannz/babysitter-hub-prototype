@@ -1,5 +1,5 @@
 
-import type { Session, Transaction, User, JobPosting } from '@/types';
+import type { Session, Transaction, User, JobPosting, ExpressedInterest } from '@/types';
 
 export const mockUser: User = {
   id: 'user1',
@@ -125,14 +125,21 @@ export const mockTransactions: Transaction[] = [
 // Using specific dates to avoid hydration issues.
 // Let's assume "today" for mock data generation is July 25, 2024.
 const mockCreationDate1 = new Date(2024, 6, 24); // July 24, 2024
-const mockJobDate1 = new Date(2024, 6, 28);     // July 28, 2024 (3 days from 25th)
+const mockJobDate1 = new Date(2024, 6, 29);     // July 29, 2024 (Adjusted to Mon, Jul 29)
 
 const mockCreationDate2 = new Date(2024, 6, 25); // July 25, 2024
-const mockJobDate2 = new Date(2024, 6, 30);     // July 30, 2024 (5 days from 25th)
+const mockJobDate2 = new Date(2024, 6, 31);     // July 31, 2024 (Adjusted to Wed, Jul 31)
 
 const mockCreationDate3 = new Date(2024, 6, 25); // July 25, 2024
-const mockJobDate3 = new Date(2024, 7, 1);      // August 1, 2024 (7 days from July 25th)
+const mockJobDate3 = new Date(2024, 7, 2);      // August 2, 2024 (Adjusted to Fri, Aug 02)
 
+const mockInterestFromBob: ExpressedInterest = {
+  userId: 'user2',
+  userName: 'Bob The Builder',
+  userAvatar: 'https://placehold.co/100x100.png?text=BB',
+  message: 'Hi Alice, I can help out with this!',
+  timestamp: new Date(2024, 6, 26, 10, 0, 0), // Mock timestamp
+};
 
 export const mockJobPostings: JobPosting[] = [
   {
@@ -178,6 +185,7 @@ export const mockJobPostings: JobPosting[] = [
     notes: 'Urgent: Sitter needed for next Friday evening. Includes bedtime routine.',
     status: 'open',
     createdAt: mockCreationDate3,
-    expressedInterests: [],
+    expressedInterests: [mockInterestFromBob], // Added mock interest here
   },
 ];
+
