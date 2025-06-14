@@ -4,11 +4,10 @@ import { Button } from '@/components/ui/button';
 import { PointsSummary } from '@/components/dashboard/points-summary';
 import { SessionHistory } from '@/components/dashboard/session-history';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarPlus, ListChecks, Users, ClipboardList, PlusCircle } from 'lucide-react'; // Added ClipboardList and PlusCircle
-import { mockUser, mockSessions, mockJobPostings } from '@/lib/mock-data'; // Import mock data
+import { CalendarPlus, ListChecks, Users, ClipboardList, PlusCircle } from 'lucide-react';
+import { mockUser, mockSessions, mockJobPostings } from '@/lib/mock-data';
 
 export default function DashboardPage() {
-  // Using mock data for demonstration
   const currentUser = mockUser; 
   const sessions = mockSessions;
   const pendingConfirmationCount = sessions.filter(s => 
@@ -27,8 +26,9 @@ export default function DashboardPage() {
 
       <PointsSummary points={currentUser.points} arrearsLimit={-10} />
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="shadow-sm hover:shadow-md transition-shadow">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-6">
+        {/* Row 1 */}
+        <Card className="shadow-sm hover:shadow-md transition-shadow lg:col-span-3">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl text-primary">
               <CalendarPlus className="h-6 w-6" />
@@ -42,7 +42,23 @@ export default function DashboardPage() {
             </Button>
           </CardContent>
         </Card>
-        <Card className="shadow-sm hover:shadow-md transition-shadow">
+        <Card className="shadow-sm hover:shadow-md transition-shadow lg:col-span-3">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-xl text-primary">
+              <PlusCircle className="h-6 w-6" />
+              Create Job Posting
+            </CardTitle>
+            <CardDescription>Need a babysitter? Post your request here.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+              <Link href="/create-job">Create Posting</Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Row 2 */}
+        <Card className="shadow-sm hover:shadow-md transition-shadow lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl text-primary">
               <ListChecks className="h-6 w-6" />
@@ -56,21 +72,7 @@ export default function DashboardPage() {
             </Button>
           </CardContent>
         </Card>
-        <Card className="shadow-sm hover:shadow-md transition-shadow">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-xl text-primary">
-              <Users className="h-6 w-6" />
-              View Members
-            </CardTitle>
-            <CardDescription>See who is in your Babysitter Hub group.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button asChild className="w-full" variant="outline">
-              <Link href="/members">Community Members</Link>
-            </Button>
-          </CardContent>
-        </Card>
-        <Card className="shadow-sm hover:shadow-md transition-shadow">
+        <Card className="shadow-sm hover:shadow-md transition-shadow lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl text-primary">
               <ClipboardList className="h-6 w-6" />
@@ -84,17 +86,17 @@ export default function DashboardPage() {
             </Button>
           </CardContent>
         </Card>
-        <Card className="shadow-sm hover:shadow-md transition-shadow">
+        <Card className="shadow-sm hover:shadow-md transition-shadow lg:col-span-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-xl text-primary">
-              <PlusCircle className="h-6 w-6" />
-              Create Job Posting
+              <Users className="h-6 w-6" />
+              View Members
             </CardTitle>
-            <CardDescription>Need a babysitter? Post your request here.</CardDescription>
+            <CardDescription>See who is in your Babysitter Hub group.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-              <Link href="/create-job">Create Posting</Link>
+            <Button asChild className="w-full" variant="outline">
+              <Link href="/members">Community Members</Link>
             </Button>
           </CardContent>
         </Card>
