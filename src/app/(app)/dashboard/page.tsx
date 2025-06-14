@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { PointsSummary } from '@/components/dashboard/points-summary';
 import { SessionHistory } from '@/components/dashboard/session-history';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarPlus, ListChecks, Users, ClipboardList } from 'lucide-react'; // Added ClipboardList
+import { CalendarPlus, ListChecks, Users, ClipboardList, PlusCircle } from 'lucide-react'; // Added ClipboardList and PlusCircle
 import { mockUser, mockSessions, mockJobPostings } from '@/lib/mock-data'; // Import mock data
 
 export default function DashboardPage() {
@@ -81,6 +81,20 @@ export default function DashboardPage() {
           <CardContent>
             <Button asChild className="w-full" variant="outline">
               <Link href="/job-board">View Job Board</Link>
+            </Button>
+          </CardContent>
+        </Card>
+        <Card className="shadow-sm hover:shadow-md transition-shadow">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-xl text-primary">
+              <PlusCircle className="h-6 w-6" />
+              Create Job Posting
+            </CardTitle>
+            <CardDescription>Need a babysitter? Post your request here.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+              <Link href="/create-job">Create Posting</Link>
             </Button>
           </CardContent>
         </Card>
