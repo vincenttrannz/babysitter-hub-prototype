@@ -23,7 +23,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { Send } from 'lucide-react';
+import { Send, Info } from 'lucide-react';
 
 const expressInterestSchema = z.object({
   message: z.string().min(1, "A message is required.").max(500, "Message must be 500 characters or less."),
@@ -87,6 +87,10 @@ export function ExpressInterestDialog({
                 </FormItem>
               )}
             />
+            <div className="flex items-start p-3 text-xs text-muted-foreground bg-secondary/50 rounded-md border border-border">
+                <Info className="h-4 w-4 mr-2 mt-0.5 shrink-0 text-primary"/>
+                <span>Please note: If your interest is accepted, you will be notified. Your expressed interest is valid for 24 hours for the job poster to respond.</span>
+            </div>
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" variant="outline">

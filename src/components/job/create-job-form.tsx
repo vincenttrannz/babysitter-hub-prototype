@@ -33,7 +33,7 @@ const createJobFormSchema = z.object({
   childrenAgeRange: z.string().max(50, "Age range must be 50 characters or less.").optional(),
   notes: z.string().max(500, "Notes must be 500 characters or less.").optional(),
 })
-.refine(data => { // Validate start time is in the future if date is today
+.refine(data => { 
     if (data.date && data.startTime) {
         const now = new Date();
         const jobDate = new Date(data.date);
@@ -52,7 +52,7 @@ const createJobFormSchema = z.object({
     message: "Start time must be in the future if the date is today.",
     path: ["startTime"],
 })
-.refine(data => { // Validate end time is after start time
+.refine(data => {
   if (data.date && data.startTime && data.endTime) {
     const startDate = new Date(data.date);
     const [startHours, startMinutes] = data.startTime.split(':').map(Number);
@@ -62,21 +62,29 @@ const createJobFormSchema = z.object({
     const [endHours, endMinutes] = data.endTime.split(':').map(Number);
     endDate.setHours(endHours, endMinutes);
     
-    // Basic handling for overnight: if end time is earlier or same as start, assume next day for comparison
-    // More robust logic might be needed for multi-day or complex overnight scenarios
-    if (endDate <= startDate) {
-       // For this validation, we assume it's a simple "end must be after start" on the same day or logically following.
-       // Complex overnight spanning past midnight into another day isn't fully handled by this simple check alone
-       // without knowing if it's *intended* to be next day.
-       // This check primarily ensures endTime > startTime for a given day.
-    }
     return endDate > startDate;
   }
   return true;
 }, {
   message: "End time must be after start time on the selected date.",
   path: ["endTime"],
+})
+.refine(data => { // New refinement for 24-hour notice
+    if (data.date && data.startTime) {
+        const now = new Date();
+        const jobStartDateTime = new Date(data.date);
+        const [hours, minutes] = data.startTime.split(':').map(Number);
+        jobStartDateTime.setHours(hours, minutes, 0, 0);
+
+        const twentyFourHoursFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+        return jobStartDateTime >= twentyFourHoursFromNow;
+    }
+    return true;
+}, {
+    message: "Job start time must be at least 24 hours from now.",
+    path: ["startTime"], 
 });
+
 
 type CreateJobFormValues = z.infer<typeof createJobFormSchema>;
 
@@ -96,14 +104,12 @@ export function CreateJobForm() {
   });
 
   function onSubmit(data: CreateJobFormValues) {
-    // In a real app, you'd send this data to your backend
     console.log("Job Posting Data:", data);
     toast({
       title: 'Job Posting Created (Mock)',
       description: 'Your job posting has been successfully submitted.',
     });
     form.reset();
-    // Optionally, redirect the user to the job board or their new posting
     router.push('/job-board'); 
   }
 
@@ -141,14 +147,14 @@ export function CreateJobForm() {
                     selected={field.value}
                     onSelect={field.onChange}
                     disabled={(date) =>
-                      date < new Date(new Date().setHours(0,0,0,0)) // Disable past dates
+                      date < new Date(new Date().setHours(0,0,0,0)) 
                     }
                     initialFocus
                   />
                 </PopoverContent>
               </Popover>
               <FormDescription>
-                When do you need the babysitter?
+                When do you need the babysitter? Must be at least 24 hours from now.
               </FormDescription>
               <FormMessage />
             </FormItem>

@@ -12,7 +12,7 @@ import { ClipboardList, CalendarDays, Clock, Users as UsersIcon, MessageSquare, 
 import { useToast } from "@/hooks/use-toast";
 import { useState } from 'react';
 import { ExpressInterestDialog } from '@/components/job/express-interest-dialog';
-import { ViewInterestsDialog } from '@/components/job/view-interests-dialog'; // New Import
+import { ViewInterestsDialog } from '@/components/job/view-interests-dialog';
 
 export default function JobBoardPage() {
   const { toast } = useToast();
@@ -20,7 +20,7 @@ export default function JobBoardPage() {
     mockJobPostings.filter(job => job.status === 'open')
   );
   const [selectedJobForInterest, setSelectedJobForInterest] = useState<JobPosting | null>(null);
-  const [selectedJobForViewingInterests, setSelectedJobForViewingInterests] = useState<JobPosting | null>(null); // New state
+  const [selectedJobForViewingInterests, setSelectedJobForViewingInterests] = useState<JobPosting | null>(null);
 
   const currentUser = mockUser;
 
@@ -37,7 +37,7 @@ export default function JobBoardPage() {
       userName: currentUser.name,
       userAvatar: currentUser.avatarUrl,
       message: message,
-      timestamp: new Date(),
+      timestamp: new Date(), // Interest expressed now
     };
 
     setJobPostings(prevJobs =>
@@ -47,10 +47,16 @@ export default function JobBoardPage() {
           : job
       )
     );
+    // Also update the source mockJobPostings for consistency if dialog is reopened for same job
+    const sourceJobIndex = mockJobPostings.findIndex(job => job.id === jobId);
+    if (sourceJobIndex !== -1) {
+        mockJobPostings[sourceJobIndex].expressedInterests = [...(mockJobPostings[sourceJobIndex].expressedInterests || []), newInterest];
+    }
+
 
     toast({
       title: "Interest Sent!",
-      description: `Your message has been sent to ${jobToUpdate.requestingParentName}.`,
+      description: `Your message has been sent to ${jobToUpdate.requestingParentName}. It's valid for 24 hours.`,
     });
     
     if (jobToUpdate.requestingParentId !== currentUser.id) {
@@ -67,17 +73,34 @@ export default function JobBoardPage() {
     return !!job.expressedInterests?.some(interest => interest.userId === currentUser.id);
   };
 
-  const handleMarkAsFilled = (jobId: string) => {
-    setJobPostings(prevJobs => prevJobs.filter(job => job.id !== jobId)); // Remove from open list
-    const jobToUpdate = mockJobPostings.find(j => j.id === jobId); // Ideally update original source or backend
-    if(jobToUpdate) {
-        // This is a mock update for local state if we were showing all jobs
-        // For now, simply filtering from `jobPostings` (open jobs) is enough
-        console.log(`Mock: Job ${jobId} marked as filled. In a real app, update backend.`);
-    }
+  const handleSelectCandidate = (jobId: string, selectedInterest: ExpressedInterest) => {
+    const job = jobPostings.find(j => j.id === jobId);
+    if (!job) return;
+
+    setJobPostings(prevJobs => prevJobs.filter(j => j.id !== jobId)); // Remove from open list
+    // In a real app, update backend status of job to 'filled' or 'candidate_selected'
+    
     toast({
-      title: "Job Marked as Filled (Mock)",
-      description: "This job posting will no longer be listed as open.",
+      title: "Candidate Selected! (Mock)",
+      description: `${selectedInterest.userName} has been selected for your job on ${format(new Date(job.date), 'MMM dd')}.`,
+    });
+
+    // Mock notification to selected candidate
+    toast({
+      title: "You've been selected! (Mock Notification)",
+      description: `You were selected by ${job.requestingParentName} for the job on ${format(new Date(job.date), 'MMM dd')}. Contact them to arrange details.`,
+      duration: 7000,
+    });
+
+    // Mock notifications to other candidates
+    job.expressedInterests?.forEach(interest => {
+      if (interest.userId !== selectedInterest.userId) {
+        toast({
+          title: "Job Filled (Mock Notification)",
+          description: `The job posted by ${job.requestingParentName} for ${format(new Date(job.date), 'MMM dd')} that you were interested in has been filled.`,
+          duration: 7000,
+        });
+      }
     });
     setSelectedJobForViewingInterests(null); // Close the dialog
   };
@@ -210,10 +233,9 @@ export default function JobBoardPage() {
             onOpenChange={(isOpen) => {
                 if (!isOpen) setSelectedJobForViewingInterests(null);
             }}
-            onMarkAsFilled={handleMarkAsFilled}
+            onSelectCandidate={handleSelectCandidate}
         />
       )}
     </div>
   );
 }
-
