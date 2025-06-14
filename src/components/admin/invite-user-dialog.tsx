@@ -23,7 +23,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { MailPlus, Send, Info } from 'lucide-react';
+import { MailPlus, Send, Info, CheckCircle, RotateCw } from 'lucide-react';
+import { useState } from 'react';
 
 const inviteUserSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address." }),
@@ -44,6 +45,8 @@ export function InviteUserDialog({
   hubCode,
   onInviteSubmit,
 }: InviteUserDialogProps) {
+  const [invitationSentTo, setInvitationSentTo] = useState<string | null>(null);
+
   const form = useForm<InviteUserFormValues>({
     resolver: zodResolver(inviteUserSchema),
     defaultValues: {
@@ -53,54 +56,98 @@ export function InviteUserDialog({
 
   const handleSubmit = (values: InviteUserFormValues) => {
     onInviteSubmit(values.email);
+    setInvitationSentTo(values.email);
     form.reset();
-    // onOpenChange(false); // Parent component will handle closing via toast callback
   };
 
+  const handleSendAnother = () => {
+    setInvitationSentTo(null);
+    form.reset(); // Ensure form is clear for next input
+  };
+
+  // Handle dialog close/open change
+  const handleOpenChange = (isOpen: boolean) => {
+    if (!isOpen) {
+      // Reset internal state when dialog is closed externally or by its close button
+      setInvitationSentTo(null);
+      form.reset();
+    }
+    onOpenChange(isOpen);
+  };
+
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="sm:max-w-[480px]">
         <DialogHeader>
           <DialogTitle className="text-primary flex items-center gap-2">
             <MailPlus className="h-6 w-6" />
             Invite New Member to Hub
           </DialogTitle>
-          <DialogDescription>
-            Enter the email address of the person you want to invite. They will receive an email (mock) with the Hub Code to join.
-          </DialogDescription>
+          {!invitationSentTo && (
+            <DialogDescription>
+              Enter the email address of the person you want to invite. They will receive an email (mock) with the Hub Code to join.
+            </DialogDescription>
+          )}
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 pt-2">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email Address</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="invitee@example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex items-start p-3 text-xs text-muted-foreground bg-secondary/50 rounded-md border border-border">
-                <Info className="h-4 w-4 mr-2 mt-0.5 shrink-0 text-primary"/>
-                <span>The invitee will receive your Hub Code: <strong className="text-primary font-mono">{hubCode}</strong>. They can use this code on the "Join Hub" page.</span>
+
+        {invitationSentTo ? (
+          <div className="space-y-6 py-4">
+            <div className="flex flex-col items-center text-center p-4 bg-green-500/10 rounded-lg border border-green-500/30">
+              <CheckCircle className="h-12 w-12 text-green-600 mb-3" />
+              <h3 className="text-lg font-semibold text-primary">Invitation Sent!</h3>
+              <p className="text-sm text-muted-foreground">
+                A (mock) invitation with Hub Code <strong className="text-primary font-mono">{hubCode}</strong> has been sent to <strong className="text-primary">{invitationSentTo}</strong>.
+              </p>
             </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button type="button" variant="outline">
-                  Cancel
+            <Button onClick={handleSendAnother} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+              <RotateCw className="mr-2 h-4 w-4" />
+              Send Another Invitation
+            </Button>
+          </div>
+        ) : (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 pt-2">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email Address</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="invitee@example.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex items-start p-3 text-xs text-muted-foreground bg-secondary/50 rounded-md border border-border">
+                  <Info className="h-4 w-4 mr-2 mt-0.5 shrink-0 text-primary"/>
+                  <span>The invitee will receive your Hub Code: <strong className="text-primary font-mono">{hubCode}</strong>. They can use this code on the "Join Hub" page.</span>
+              </div>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button type="button" variant="outline">
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button type="submit" className="bg-accent text-accent-foreground hover:bg-accent/90">
+                  <Send className="mr-2 h-4 w-4" />
+                  Send Invitation
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        )}
+        {invitationSentTo && (
+           <DialogFooter className="mt-0 pt-0">
+             <DialogClose asChild>
+                <Button type="button" variant="outline" className="w-full">
+                  Close
                 </Button>
               </DialogClose>
-              <Button type="submit" className="bg-accent text-accent-foreground hover:bg-accent/90">
-                <Send className="mr-2 h-4 w-4" />
-                Send Invitation
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+           </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );

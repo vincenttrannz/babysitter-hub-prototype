@@ -40,12 +40,13 @@ export default function AdminPage() {
   };
 
   const handleInviteSent = (email: string) => {
+    // The toast is now a secondary notification; the modal provides primary feedback.
     toast({
-      title: "Invitation Sent (Mock)",
-      description: `An invitation email with the hub code ${currentUser.hubCode} has been (mock) sent to ${email}.`,
-      duration: 7000,
+      title: "Invitation Processed (Mock)",
+      description: `An invitation email with the hub code ${currentUser.hubCode} has been (mock) initiated for ${email}.`,
+      duration: 5000, // Shorter duration as modal gives immediate feedback
     });
-    setIsInviteModalOpen(false);
+    // setIsInviteModalOpen(false); // Modal now handles its own state for "send another"
   };
 
 
