@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -31,6 +32,7 @@ import { format } from 'date-fns';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { mockMembers, mockUser } from '@/lib/mock-data'; // Placeholder members
+import type { Session, User } from '@/types';
 
 const sessionFormSchema = z.object({
   role: z.enum(['babysitter', 'parent'], {
@@ -41,7 +43,29 @@ const sessionFormSchema = z.object({
   startTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:MM)"),
   endTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Invalid time format (HH:MM)"),
   notes: z.string().max(500, "Notes must be 500 characters or less.").optional(),
+})
+.refine(data => {
+  if (data.date && data.startTime && data.endTime) {
+    const startDate = new Date(data.date);
+    const [startHours, startMinutes] = data.startTime.split(':').map(Number);
+    startDate.setHours(startHours, startMinutes);
+
+    const endDate = new Date(data.date);
+    const [endHours, endMinutes] = data.endTime.split(':').map(Number);
+    endDate.setHours(endHours, endMinutes);
+    
+    // Handle overnight sessions correctly for comparison
+    if (endDate <= startDate) {
+        endDate.setDate(endDate.getDate() + 1);
+    }
+    return endDate > startDate;
+  }
+  return true;
+}, {
+  message: "End time must be after start time.",
+  path: ["endTime"],
 });
+
 
 type SessionFormValues = z.infer<typeof sessionFormSchema>;
 
@@ -52,6 +76,8 @@ const defaultValues: Partial<SessionFormValues> = {
 export function LogSessionForm() {
   const { toast } = useToast();
   const [calculatedPoints, setCalculatedPoints] = useState<number | null>(null);
+  const currentUser = mockUser; // Assuming mockUser is the currently logged-in user
+  
   const form = useForm<SessionFormValues>({
     resolver: zodResolver(sessionFormSchema),
     defaultValues,
@@ -67,14 +93,19 @@ export function LogSessionForm() {
     if (date && startTime && endTime && /^([01]\d|2[0-3]):([0-5]\d)$/.test(startTime) && /^([01]\d|2[0-3]):([0-5]\d)$/.test(endTime)) {
       const startDate = new Date(date);
       const [startHours, startMinutes] = startTime.split(':').map(Number);
-      startDate.setHours(startHours, startMinutes);
+      startDate.setHours(startHours, startMinutes, 0, 0);
 
-      const endDate = new Date(date); // Assume same day for simplicity, real logic would handle crossing midnight
+      const endDate = new Date(date); 
       const [endHours, endMinutes] = endTime.split(':').map(Number);
-      endDate.setHours(endHours, endMinutes);
+      endDate.setHours(endHours, endMinutes, 0, 0);
 
+      // Handle overnight sessions by incrementing day if end time is earlier than start time
       if (endDate <= startDate) {
-        setCalculatedPoints(null); // Or show error
+        endDate.setDate(endDate.getDate() + 1);
+      }
+      
+      if (endDate <= startDate) { // Check again after potential day increment
+        setCalculatedPoints(null); 
         return;
       }
 
@@ -85,14 +116,14 @@ export function LogSessionForm() {
         const nextHalfHour = new Date(current);
         nextHalfHour.setMinutes(current.getMinutes() + 30);
 
-        if (nextHalfHour > endDate) break; // Don't count partial last interval
+        if (nextHalfHour > endDate) break; 
 
         const hour = current.getHours();
-        points += (hour >= 0 && hour < 7) || hour >= 23 ? 2 : 1; // Midnight hours example logic
+        points += (hour >= 23 || hour < 7) ? 2 : 1; // Points: 2 for 11 PM - 7 AM, 1 otherwise
         
         current = nextHalfHour;
       }
-      setCalculatedPoints(points);
+      setCalculatedPoints(points > 0 ? points : null);
     } else {
       setCalculatedPoints(null);
     }
@@ -100,20 +131,68 @@ export function LogSessionForm() {
 
 
   function onSubmit(data: SessionFormValues) {
-    console.log(data);
-    toast({
-      title: 'Session Logged (Mock)',
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify({...data, points: calculatedPoints}, null, 2)}</code>
-        </pre>
-      ),
-    });
+    const otherParty = availableMembers.find(m => m.id === data.otherPartyId);
+    if (!otherParty || calculatedPoints === null || calculatedPoints <= 0) {
+        toast({ variant: "destructive", title: "Error", description: "Could not log session. Please check details."});
+        return;
+    }
+
+    const newSession: Partial<Session> = { // Using Partial as ID, createdAt etc. would be backend generated
+        date: data.date,
+        startTime: data.startTime,
+        endTime: data.endTime,
+        points: calculatedPoints,
+        notes: data.notes,
+        status: 'pending_parent', // Always pending_parent for manual logs, parent confirms spend.
+    };
+
+    if (data.role === 'parent') { // Current user was the parent
+        newSession.parentId = currentUser.id;
+        newSession.parentName = currentUser.name;
+        newSession.babysitterId = otherParty.id;
+        newSession.babysitterName = otherParty.name;
+        
+        toast({
+            title: 'Session Logged (As Parent)',
+            description: `Please go to 'Confirm Sessions' to confirm this session and transfer ${calculatedPoints} points to ${otherParty.name}.`,
+            duration: 7000,
+        });
+        // Mock notification to babysitter
+        toast({
+            title: `Notification for ${otherParty.name} (Mock)`,
+            description: `${currentUser.name} has logged a session they had with you on ${format(data.date, 'MMM dd')}. It's awaiting their confirmation before ${calculatedPoints} points are awarded to you.`,
+            duration: 9000,
+        });
+
+    } else { // Current user was the babysitter
+        newSession.babysitterId = currentUser.id;
+        newSession.babysitterName = currentUser.name;
+        newSession.parentId = otherParty.id;
+        newSession.parentName = otherParty.name;
+
+        toast({
+            title: 'Session Logged (As Babysitter)',
+            description: `${otherParty.name} has been notified to confirm this session so you can receive ${calculatedPoints} points.`,
+            duration: 7000,
+        });
+        // Mock notification to parent
+        toast({
+            title: `Notification for ${otherParty.name} (Mock)`,
+            description: `${currentUser.name} has logged a babysitting session they provided for you on ${format(data.date, 'MMM dd')} (${calculatedPoints} points). Please go to 'Confirm Sessions' to review and confirm it.`,
+            duration: 9000,
+        });
+    }
+
+    console.log("Mock Logged Session:", { ...newSession, id: `mockSession_${Date.now()}` });
+    // In a real app, you'd send this `newSession` to your backend to be saved.
+    // For this prototype, we could add it to mockSessions if we were managing state globally,
+    // but for now, the toasts and console log will suffice.
+
     form.reset();
     setCalculatedPoints(null);
   }
 
-  const availableMembers = mockMembers.filter(member => member.id !== mockUser.id);
+  const availableMembers = mockMembers.filter(member => member.id !== currentUser.id);
 
 
   return (
@@ -194,7 +273,7 @@ export function LogSessionForm() {
                     <Button
                       variant={'outline'}
                       className={cn(
-                        'w-[240px] pl-3 text-left font-normal',
+                        'w-full md:w-[280px] pl-3 text-left font-normal',
                         !field.value && 'text-muted-foreground'
                       )}
                     >
@@ -213,7 +292,7 @@ export function LogSessionForm() {
                     selected={field.value}
                     onSelect={field.onChange}
                     disabled={(date) =>
-                      date > new Date() || date < new Date('1900-01-01')
+                      date > new Date() || date < new Date('2020-01-01') // Allow reasonable past dates
                     }
                     initialFocus
                   />
@@ -253,7 +332,7 @@ export function LogSessionForm() {
           />
         </div>
         
-        {calculatedPoints !== null && (
+        {calculatedPoints !== null && calculatedPoints > 0 && (
           <div className="p-4 bg-secondary rounded-md">
             <div className="flex items-center gap-2">
               <Info className="h-5 w-5 text-primary" />
@@ -262,7 +341,7 @@ export function LogSessionForm() {
               </p>
             </div>
             <p className="text-xs text-muted-foreground mt-1">
-              Points are 1 per half hour (regular hours) and 2 per half hour (e.g. 11 PM - 7 AM). Final points subject to confirmation.
+              Points are 1 per half hour (regular hours) and 2 per half hour (e.g. 11 PM - 7 AM). Final points subject to confirmation by the parent.
             </p>
           </div>
         )}
@@ -282,7 +361,7 @@ export function LogSessionForm() {
                 />
               </FormControl>
               <FormDescription>
-                These notes will be visible to the other party.
+                These notes will be visible to the other party upon confirmation.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -295,3 +374,4 @@ export function LogSessionForm() {
     </Form>
   );
 }
+
