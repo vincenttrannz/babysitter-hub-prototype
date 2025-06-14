@@ -12,19 +12,31 @@ import {
   DialogTitle,
   DialogClose,
 } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription as ShadCardDescription } from '@/components/ui/card'; // Renamed CardDescription to avoid conflict
 import { CheckCircle, MessageSquare, Clock, UserCheck, AlertTriangle, BadgeCent } from 'lucide-react';
 import { format, formatDistanceToNow, addHours, isPast } from 'date-fns';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 interface ViewInterestsDialogProps {
   job: JobPosting;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSelectCandidate: (jobId: string, selectedInterest: ExpressedInterest) => void; // Changed from onMarkAsFilled
+  onSelectCandidate: (jobId: string, selectedInterest: ExpressedInterest) => void;
 }
 
 export function ViewInterestsDialog({
@@ -34,12 +46,25 @@ export function ViewInterestsDialog({
   onSelectCandidate,
 }: ViewInterestsDialogProps) {
   const { toast } = useToast();
+  const [candidateToConfirm, setCandidateToConfirm] = useState<ExpressedInterest | null>(null);
 
-  const handleSelectCandidateClick = (interest: ExpressedInterest) => {
-    onSelectCandidate(job.id, interest);
-    // Toasts for mock notifications are handled in the parent page (job-board/page.tsx)
-    onOpenChange(false); // Close dialog
+  const handleInitiateSelectCandidate = (interest: ExpressedInterest) => {
+    setCandidateToConfirm(interest);
+    // The AlertDialog will be triggered by its own trigger, no need to manage its open state here directly
   };
+
+  const handleConfirmSelection = () => {
+    if (candidateToConfirm) {
+      onSelectCandidate(job.id, candidateToConfirm);
+      // Toasts for mock notifications are handled in the parent page (job-board/page.tsx)
+      setCandidateToConfirm(null); // Reset
+      onOpenChange(false); // Close main dialog
+    }
+  };
+
+  const handleCancelSelection = () => {
+    setCandidateToConfirm(null); // Reset
+  }
 
   const getInterestStatus = (timestamp: Date): { text: string; isExpired: boolean; className: string } => {
     const expiryDate = addHours(new Date(timestamp), 24);
@@ -54,14 +79,17 @@ export function ViewInterestsDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={(isOpen) => {
+      if (!isOpen) setCandidateToConfirm(null); // Reset on main dialog close
+      onOpenChange(isOpen);
+    }}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="text-primary">Interests for Your Job Posting</DialogTitle>
-          <DialogDescription>
+          <ShadCardDescription> {/* Using aliased CardDescription */}
             Review messages from members interested in your job scheduled for {format(new Date(job.date), 'MMM dd, yyyy')} at {job.startTime}.
             Interests are valid for 24 hours from the time they are expressed.
-          </DialogDescription>
+          </ShadCardDescription>
         </DialogHeader>
         
         <ScrollArea className="max-h-[60vh] pr-4">
@@ -78,10 +106,10 @@ export function ViewInterestsDialog({
                       </Avatar>
                       <div className="flex-grow">
                         <CardTitle className="text-base text-card-foreground">{interest.userName}</CardTitle>
-                        <CardDescription className="text-xs flex items-center gap-1">
+                        <ShadCardDescription className="text-xs flex items-center gap-1"> {/* Using aliased CardDescription */}
                           <Clock className="h-3 w-3" />
                           Expressed: {format(new Date(interest.timestamp), "MMM dd, HH:mm")}
-                        </CardDescription>
+                        </ShadCardDescription>
                          <p className={cn("text-xs mt-1", status.className)}>
                             {status.text}
                          </p>
@@ -92,13 +120,34 @@ export function ViewInterestsDialog({
                           <MessageSquare className="h-4 w-4 mt-0.5 shrink-0 text-accent"/> 
                           <p>{interest.message}</p>
                       </div>
-                      <Button 
-                        onClick={() => handleSelectCandidateClick(interest)}
-                        className="w-full bg-green-600 hover:bg-green-700 text-white"
-                        disabled={status.isExpired}
-                      >
-                        <UserCheck className="mr-2 h-4 w-4" /> Select {interest.userName}
-                      </Button>
+                       <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button 
+                            onClick={() => handleInitiateSelectCandidate(interest)}
+                            className="w-full bg-green-600 hover:bg-green-700 text-white"
+                            disabled={status.isExpired}
+                          >
+                            <UserCheck className="mr-2 h-4 w-4" /> Select {interest.userName}
+                          </Button>
+                        </AlertDialogTrigger>
+                        {candidateToConfirm && candidateToConfirm.userId === interest.userId && ( // Ensure modal is for the correct candidate
+                           <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Confirm Candidate Selection</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to select <strong>{candidateToConfirm.userName}</strong> for the job on {format(new Date(job.date), 'MMM dd, yyyy')}?
+                                This action will notify them and other applicants.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel onClick={handleCancelSelection}>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={handleConfirmSelection} className="bg-green-600 hover:bg-green-700">
+                                Confirm Selection
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        )}
+                      </AlertDialog>
                     </CardContent>
                   </Card>
                 );
@@ -124,3 +173,4 @@ export function ViewInterestsDialog({
     </Dialog>
   );
 }
+
