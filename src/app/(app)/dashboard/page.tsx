@@ -4,8 +4,10 @@ import { Button } from '@/components/ui/button';
 import { PointsSummary } from '@/components/dashboard/points-summary';
 import { SessionHistory } from '@/components/dashboard/session-history';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarPlus, ListChecks, Users, ClipboardList, PlusCircle, Home, Info } from 'lucide-react';
+import { CalendarPlus, ListChecks, Users, ClipboardList, PlusCircle, Home, Info, AlertCircle } from 'lucide-react';
 import { mockUser, mockSessions, mockJobPostings } from '@/lib/mock-data';
+
+const ARREARS_LIMIT = -10; // Consistent with admin panel initial setting
 
 export default function DashboardPage() {
   const currentUser = mockUser; 
@@ -15,6 +17,8 @@ export default function DashboardPage() {
     (s.status === 'pending_babysitter' && s.babysitterId === currentUser.id)
   ).length;
   const openJobCount = mockJobPostings.filter(job => job.status === 'open').length;
+
+  const canCreateJob = currentUser.points > ARREARS_LIMIT;
 
   return (
     <div className="container py-10 space-y-8">
@@ -43,7 +47,7 @@ export default function DashboardPage() {
         </Card>
       )}
 
-      <PointsSummary points={currentUser.points} arrearsLimit={-10} />
+      <PointsSummary points={currentUser.points} arrearsLimit={ARREARS_LIMIT} />
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-6">
         {/* Row 1 */}
@@ -70,9 +74,15 @@ export default function DashboardPage() {
             <CardDescription>Need a babysitter? Post your request here.</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+            <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90" disabled={!canCreateJob}>
               <Link href="/create-job">Create Posting</Link>
             </Button>
+            {!canCreateJob && (
+              <p className="mt-2 text-xs text-destructive flex items-center gap-1">
+                <AlertCircle className="h-4 w-4" />
+                Your points are too low to create new job postings.
+              </p>
+            )}
           </CardContent>
         </Card>
 

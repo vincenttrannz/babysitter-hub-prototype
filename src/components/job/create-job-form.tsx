@@ -94,7 +94,11 @@ const defaultValues: Partial<CreateJobFormValues> = {
   notes: '',
 };
 
-export function CreateJobForm() {
+interface CreateJobFormProps {
+  canPostJob: boolean;
+}
+
+export function CreateJobForm({ canPostJob }: CreateJobFormProps) {
   const { toast } = useToast();
   const router = useRouter();
   const form = useForm<CreateJobFormValues>({
@@ -104,6 +108,14 @@ export function CreateJobForm() {
   });
 
   function onSubmit(data: CreateJobFormValues) {
+    if (!canPostJob) {
+        toast({
+            variant: "destructive",
+            title: "Cannot Post Job",
+            description: "Your points balance is too low to create new job postings."
+        });
+        return;
+    }
     console.log("Job Posting Data:", data);
     toast({
       title: 'Job Posting Created (Mock)',
@@ -131,6 +143,7 @@ export function CreateJobForm() {
                         'w-full md:w-[280px] pl-3 text-left font-normal',
                         !field.value && 'text-muted-foreground'
                       )}
+                      disabled={!canPostJob}
                     >
                       {field.value ? (
                         format(field.value, 'PPP')
@@ -169,7 +182,7 @@ export function CreateJobForm() {
               <FormItem>
                 <FormLabel>Start Time (HH:MM)</FormLabel>
                 <FormControl>
-                  <Input type="time" placeholder="e.g., 18:30" {...field} />
+                  <Input type="time" placeholder="e.g., 18:30" {...field} disabled={!canPostJob} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -182,7 +195,7 @@ export function CreateJobForm() {
               <FormItem>
                 <FormLabel>End Time (HH:MM)</FormLabel>
                 <FormControl>
-                  <Input type="time" placeholder="e.g., 21:00" {...field} />
+                  <Input type="time" placeholder="e.g., 21:00" {...field} disabled={!canPostJob} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -197,7 +210,7 @@ export function CreateJobForm() {
             <FormItem>
               <FormLabel>Number of Children</FormLabel>
               <FormControl>
-                <Input type="number" min="1" placeholder="e.g., 2" {...field} />
+                <Input type="number" min="1" placeholder="e.g., 2" {...field} disabled={!canPostJob} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -211,7 +224,7 @@ export function CreateJobForm() {
             <FormItem>
               <FormLabel>Children's Age Range (Optional)</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., 3 and 5 years old" {...field} />
+                <Input placeholder="e.g., 3 and 5 years old" {...field} disabled={!canPostJob} />
               </FormControl>
               <FormDescription>
                 Help sitters understand if they are a good fit.
@@ -232,13 +245,14 @@ export function CreateJobForm() {
                   placeholder="Any important details for the sitter: allergies, routines, etc."
                   className="resize-none"
                   {...field}
+                  disabled={!canPostJob}
                 />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full md:w-auto bg-accent text-accent-foreground hover:bg-accent/90">
+        <Button type="submit" className="w-full md:w-auto bg-accent text-accent-foreground hover:bg-accent/90" disabled={!canPostJob}>
           <PlusCircle className="mr-2 h-5 w-5" />
           Post Job
         </Button>

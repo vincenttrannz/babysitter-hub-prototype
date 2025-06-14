@@ -1,11 +1,29 @@
 
+'use client';
 import { CreateJobForm } from '@/components/job/create-job-form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { PlusCircle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertTriangle, PlusCircle } from 'lucide-react';
+import { mockUser } from '@/lib/mock-data'; // Assuming we use mockUser for the current user context
+
+const ARREARS_LIMIT = -10; // Consistent with admin panel initial setting
 
 export default function CreateJobPage() {
+  const currentUser = mockUser;
+  const canPostJob = currentUser.points > ARREARS_LIMIT;
+
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto space-y-6">
+      {!canPostJob && (
+        <Alert variant="destructive" className="shadow-md">
+          <AlertTriangle className="h-5 w-5" />
+          <AlertTitle>Unable to Create Job Posting</AlertTitle>
+          <AlertDescription>
+            Your current points balance ({currentUser.points}) is at or below the arrears limit of {ARREARS_LIMIT} points. 
+            Please log completed babysitting sessions to earn more points before creating new job postings.
+          </AlertDescription>
+        </Alert>
+      )}
       <Card className="shadow-xl">
         <CardHeader>
           <div className="flex items-center gap-2 mb-2">
@@ -18,7 +36,7 @@ export default function CreateJobPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <CreateJobForm />
+          <CreateJobForm canPostJob={canPostJob} />
         </CardContent>
       </Card>
     </div>
