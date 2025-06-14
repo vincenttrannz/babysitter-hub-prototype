@@ -6,10 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { mockMembers } from "@/lib/mock-data";
-import { UserCheck, UserX, Edit3, Save } from "lucide-react";
+import { mockMembers, mockUser } from "@/lib/mock-data"; // Use mockUser to get Hub Code
+import { UserCheck, UserX, Edit3, Save, MailPlus, Home } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import { InviteUserDialog } from "@/components/admin/invite-user-dialog";
+
 
 const pendingMembers = mockMembers.slice(0, 2).map(m => ({ ...m, status: 'pending' as const })); // Mock pending members
 const initialArrearsLimit = -10;
@@ -18,6 +20,8 @@ export default function AdminPage() {
   const { toast } = useToast();
   const [arrearsLimit, setArrearsLimit] = useState(initialArrearsLimit);
   const [editingArrears, setEditingArrears] = useState(false);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const currentUser = mockUser; // Current logged-in admin
 
   const handleApproveMember = (memberId: string) => {
     console.log(`Approving member ${memberId}`);
@@ -35,6 +39,15 @@ export default function AdminPage() {
     setEditingArrears(false);
   };
 
+  const handleInviteSent = (email: string) => {
+    toast({
+      title: "Invitation Sent (Mock)",
+      description: `An invitation email with the hub code ${currentUser.hubCode} has been (mock) sent to ${email}.`,
+      duration: 7000,
+    });
+    setIsInviteModalOpen(false);
+  };
+
 
   return (
     <div className="space-y-8">
@@ -42,6 +55,27 @@ export default function AdminPage() {
         <h1 className="text-3xl font-bold text-primary">Admin Panel</h1>
         <p className="text-muted-foreground">Manage members, settings, and platform operations.</p>
       </div>
+      
+      {currentUser.hubName && currentUser.hubCode && (
+         <Card className="shadow-md bg-primary/5 border-primary/20">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <Home className="h-7 w-7 text-primary" />
+                    <div>
+                        <CardTitle className="text-xl text-primary">Hub Management: {currentUser.hubName}</CardTitle>
+                        <CardDescription>Hub Code: <span className="font-semibold text-primary">{currentUser.hubCode}</span></CardDescription>
+                    </div>
+                </div>
+                <Button onClick={() => setIsInviteModalOpen(true)} className="bg-accent text-accent-foreground hover:bg-accent/90">
+                    <MailPlus className="mr-2 h-5 w-5"/>
+                    Invite New Member
+                </Button>
+            </div>
+          </CardHeader>
+        </Card>
+      )}
+
 
       <Card className="shadow-lg">
         <CardHeader>
@@ -126,15 +160,24 @@ export default function AdminPage() {
           <div className="flex items-center justify-between p-4 border rounded-lg">
             <div>
                 <Label htmlFor="referral-system" className="text-base font-medium">Referral System</Label>
-                <p className="text-sm text-muted-foreground">Enable or disable referral-only sign-ups.</p>
+                <p className="text-sm text-muted-foreground">Enable or disable referral-only sign-ups (Currently Inactive with Hub System).</p>
             </div>
-            <Switch id="referral-system" checked={true} disabled /> {/* Mocked as enabled */}
+            <Switch id="referral-system" checked={false} disabled /> {/* Mocked as disabled - Hub system active */}
           </div>
         </CardContent>
         <CardFooter>
             <p className="text-xs text-muted-foreground">Changes to settings may take a few moments to apply system-wide.</p>
         </CardFooter>
       </Card>
+
+      {isInviteModalOpen && (
+        <InviteUserDialog
+          open={isInviteModalOpen}
+          onOpenChange={setIsInviteModalOpen}
+          hubCode={currentUser.hubCode || "N/A"}
+          onInviteSubmit={handleInviteSent}
+        />
+      )}
     </div>
   );
 }

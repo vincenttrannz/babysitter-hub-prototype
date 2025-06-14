@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { PointsSummary } from '@/components/dashboard/points-summary';
 import { SessionHistory } from '@/components/dashboard/session-history';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarPlus, ListChecks, Users, ClipboardList, PlusCircle } from 'lucide-react';
+import { CalendarPlus, ListChecks, Users, ClipboardList, PlusCircle, Home, Info } from 'lucide-react';
 import { mockUser, mockSessions, mockJobPostings } from '@/lib/mock-data';
 
 export default function DashboardPage() {
@@ -16,13 +16,32 @@ export default function DashboardPage() {
   ).length;
   const openJobCount = mockJobPostings.filter(job => job.status === 'open').length;
 
-
   return (
     <div className="container py-10 space-y-8">
       <div>
         <h1 className="text-3xl font-bold text-primary">Welcome back, {currentUser.name}!</h1>
         <p className="text-muted-foreground">Here's an overview of your Babysitter Hub activity.</p>
       </div>
+
+      {currentUser.hubName && currentUser.hubCode && (
+        <Card className="shadow-md bg-primary/5 border-primary/20">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Home className="h-6 w-6 text-primary" />
+              <CardTitle className="text-xl text-primary">Your Hub: {currentUser.hubName}</CardTitle>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              Share this code with others to invite them to your hub:
+            </p>
+            <div className="mt-2 flex items-center gap-2 p-3 bg-background rounded-md border border-input">
+              <Info className="h-5 w-5 text-accent" />
+              <strong className="text-lg font-mono text-primary tracking-wider">{currentUser.hubCode}</strong>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <PointsSummary points={currentUser.points} arrearsLimit={-10} />
 

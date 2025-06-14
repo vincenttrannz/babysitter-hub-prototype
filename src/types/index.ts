@@ -6,6 +6,8 @@ export interface User {
   points: number;
   isAdmin?: boolean;
   avatarUrl?: string;
+  hubName?: string; // Added
+  hubCode?: string; // Added
 }
 
 export type SessionRole = 'babysitter' | 'parent';

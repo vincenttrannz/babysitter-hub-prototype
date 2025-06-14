@@ -6,24 +6,28 @@ export const mockUser: User = {
   name: 'Alice Wonderland',
   email: 'alice@example.com',
   points: 25,
-  isAdmin: false,
+  isAdmin: true, // Alice creates her hub, so she's an admin
   avatarUrl: 'https://placehold.co/100x100.png',
+  hubName: "Alice's Family Hub", // Pre-populated
+  hubCode: 'ALICEHUB', // Pre-populated
 };
 
-export const mockAdminUser: User = {
+export const mockAdminUser: User = { // This user is a global admin, but also part of a hub
   id: 'admin1',
   name: 'Admin User',
   email: 'admin@example.com',
   points: 100,
   isAdmin: true,
   avatarUrl: 'https://placehold.co/100x100.png',
+  hubName: "Admin's Community Hub", // Pre-populated
+  hubCode: 'ADMINHUB', // Pre-populated
 };
 
 export const mockMembers: User[] = [
   mockUser,
-  { id: 'user2', name: 'Bob The Builder', email: 'bob@example.com', points: 5, avatarUrl: 'https://placehold.co/100x100.png?text=BB' },
-  { id: 'user3', name: 'Charlie Brown', email: 'charlie@example.com', points: -5, avatarUrl: 'https://placehold.co/100x100.png?text=CB' },
-  { id: 'user4', name: 'Diana Prince', email: 'diana@example.com', points: 15, avatarUrl: 'https://placehold.co/100x100.png?text=DP' },
+  { id: 'user2', name: 'Bob The Builder', email: 'bob@example.com', points: 5, avatarUrl: 'https://placehold.co/100x100.png?text=BB', hubName: "Alice's Family Hub", hubCode: 'ALICEHUB' },
+  { id: 'user3', name: 'Charlie Brown', email: 'charlie@example.com', points: -5, avatarUrl: 'https://placehold.co/100x100.png?text=CB', hubName: "Alice's Family Hub", hubCode: 'ALICEHUB' },
+  { id: 'user4', name: 'Diana Prince', email: 'diana@example.com', points: 15, avatarUrl: 'https://placehold.co/100x100.png?text=DP', hubName: "Alice's Family Hub", hubCode: 'ALICEHUB' },
 ];
 
 
