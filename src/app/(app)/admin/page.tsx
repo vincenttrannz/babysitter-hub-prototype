@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { mockMembers, mockUser } from "@/lib/mock-data"; // Use mockUser to get Hub Code
 import { UserCheck, UserX, Edit3, Save, MailPlus, Home } from "lucide-react";
@@ -157,13 +156,6 @@ export default function AdminPage() {
                 <p className="text-sm text-muted-foreground">Points allocated to new members upon approval.</p>
             </div>
             <span className="text-lg font-semibold text-primary">10 points (Fixed)</span>
-          </div>
-          <div className="flex items-center justify-between p-4 border rounded-lg">
-            <div>
-                <Label htmlFor="referral-system" className="text-base font-medium">Referral System</Label>
-                <p className="text-sm text-muted-foreground">Enable or disable referral-only sign-ups (Currently Inactive with Hub System).</p>
-            </div>
-            <Switch id="referral-system" checked={false} disabled /> {/* Mocked as disabled - Hub system active */}
           </div>
         </CardContent>
         <CardFooter>
