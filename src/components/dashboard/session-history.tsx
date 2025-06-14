@@ -1,3 +1,4 @@
+
 import {
   Table,
   TableBody,
@@ -8,12 +9,12 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import type { Session, User } from '@/types';
-import { mockSessions, mockUser } from '@/lib/mock-data'; // Using mockUser to determine perspective
+import { mockSessions, mockUser } from '@/lib/mock-data'; 
 import { format } from 'date-fns';
 
 interface SessionHistoryProps {
   sessions?: Session[];
-  currentUser?: User; // To determine if points are earned or spent
+  currentUser?: User; 
 }
 
 export function SessionHistory({ sessions = mockSessions, currentUser = mockUser }: SessionHistoryProps) {
@@ -29,7 +30,7 @@ export function SessionHistory({ sessions = mockSessions, currentUser = mockUser
 
   const getStatusVariant = (status: Session['status']): "default" | "secondary" | "destructive" | "outline" => {
     switch (status) {
-      case 'confirmed': return 'default'; // default is usually primary
+      case 'confirmed': return 'default'; 
       case 'pending_babysitter':
       case 'pending_parent': return 'secondary';
       case 'disputed': return 'destructive';
@@ -37,10 +38,24 @@ export function SessionHistory({ sessions = mockSessions, currentUser = mockUser
     }
   };
 
+  const getStatusText = (status: Session['status']): string => {
+    switch (status) {
+      case 'pending_babysitter':
+      case 'pending_parent': return 'Pending';
+      case 'confirmed': return 'Confirmed';
+      case 'disputed': return 'Disputed';
+      default: return status.replace('_', ' ');
+    }
+  }
+
+  const relevantSessions = sessions.filter(
+    session => session.parentId === currentUser.id || session.babysitterId === currentUser.id
+  );
+
   return (
     <div className="mt-8">
       <h2 className="text-2xl font-semibold tracking-tight text-primary mb-4">Session History</h2>
-      {sessions.length === 0 ? (
+      {relevantSessions.length === 0 ? (
         <p className="text-muted-foreground">No sessions recorded yet.</p>
       ) : (
         <div className="rounded-md border shadow-sm bg-card">
@@ -54,7 +69,7 @@ export function SessionHistory({ sessions = mockSessions, currentUser = mockUser
               </TableRow>
             </TableHeader>
             <TableBody>
-              {sessions.map((session) => {
+              {relevantSessions.map((session) => {
                 const perspective = getSessionPerspective(session);
                 return (
                   <TableRow key={session.id}>
@@ -68,7 +83,7 @@ export function SessionHistory({ sessions = mockSessions, currentUser = mockUser
                     </TableCell>
                     <TableCell className="text-center">
                       <Badge variant={getStatusVariant(session.status)} className="capitalize">
-                        {session.status.replace('_', ' ')}
+                        {getStatusText(session.status)}
                       </Badge>
                     </TableCell>
                   </TableRow>
@@ -81,3 +96,4 @@ export function SessionHistory({ sessions = mockSessions, currentUser = mockUser
     </div>
   );
 }
+
