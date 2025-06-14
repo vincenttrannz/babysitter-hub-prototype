@@ -71,6 +71,8 @@ type SessionFormValues = z.infer<typeof sessionFormSchema>;
 
 const defaultValues: Partial<SessionFormValues> = {
   notes: '',
+  startTime: '',
+  endTime: '',
 };
 
 export function LogSessionForm() {
