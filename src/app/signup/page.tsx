@@ -8,7 +8,6 @@ import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,6 +19,7 @@ import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { Puzzle } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { useRouter } from 'next/navigation'; // Added for redirection
 
 // Simple SVG for Google Icon
 const GoogleIcon = () => (
@@ -39,42 +39,40 @@ const FacebookIcon = () => (
   </svg>
 );
 
-const referralSignupFormSchema = z.object({
+const signupFormSchema = z.object({
   fullName: z.string().min(2, { message: "Full name must be at least 2 characters." }),
   email: z.string().email({ message: "Please enter a valid email address." }),
   password: z.string().min(8, { message: "Password must be at least 8 characters."}),
   confirmPassword: z.string(),
-  referrerEmail: z.string().email({ message: "Please enter a valid referrer email." }).optional().or(z.literal('')),
-  referralCode: z.string().optional(),
 }).refine(data => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
 });
 
-type ReferralSignupFormValues = z.infer<typeof referralSignupFormSchema>;
+type SignupFormValues = z.infer<typeof signupFormSchema>;
 
-export default function ReferralSignupPage() {
+export default function SignupPage() {
   const { toast } = useToast();
-  const form = useForm<ReferralSignupFormValues>({
-    resolver: zodResolver(referralSignupFormSchema),
+  const router = useRouter(); // Added router
+  const form = useForm<SignupFormValues>({
+    resolver: zodResolver(signupFormSchema),
     defaultValues: {
       fullName: '',
       email: '',
       password: '',
       confirmPassword: '',
-      referrerEmail: '',
-      referralCode: '',
     },
   });
 
-  function onSubmit(data: ReferralSignupFormValues) {
-    console.log(data);
+  function onSubmit(data: SignupFormValues) {
+    console.log("Signup Data:",data);
     // Mock submission
     toast({
-      title: 'Sign Up Request Submitted (Mock)',
-      description: 'Your request to join has been sent. An admin will review it shortly.',
+      title: 'Sign Up Successful (Mock)',
+      description: 'Your account has been created. Please choose or create a Hub.',
     });
     form.reset();
+    router.push('/hub-selection'); // Redirect to hub selection
   }
 
   const handleSocialSignup = (provider: string) => {
@@ -82,6 +80,8 @@ export default function ReferralSignupPage() {
         title: `Sign up with ${provider} (Mock)`,
         description: `This would initiate ${provider} OAuth flow for registration.`,
     });
+    // In a real app, after social signup, you'd also redirect to /hub-selection
+    // router.push('/hub-selection');
   }
 
   return (
@@ -94,7 +94,7 @@ export default function ReferralSignupPage() {
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-primary">Create Your Account</CardTitle>
           <CardDescription>
-            Join Babysitter Hub. New members can optionally be recommended.
+            Join Babysitter Hub to exchange childcare with your community.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -167,35 +167,6 @@ export default function ReferralSignupPage() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="referrerEmail"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Referrer's Email (Optional)</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="referrer@example.com" {...field} />
-                    </FormControl>
-                     <FormDescription>
-                        The email address of the member who referred you (if any).
-                      </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="referralCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Referral Code (Optional)</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter referral code if you have one" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
               <Button type="submit" className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
                 Create Account
               </Button>
@@ -214,5 +185,3 @@ export default function ReferralSignupPage() {
     </div>
   );
 }
-
-    

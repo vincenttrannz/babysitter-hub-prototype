@@ -144,7 +144,7 @@ export default function LoginPage() {
            <p className="mt-8 text-center text-sm text-muted-foreground">
             Don&apos;t have an account?{' '}
             <Button variant="link" asChild className="text-primary p-0 h-auto">
-              <Link href="/referral-signup">
+              <Link href="/signup">
                 Sign Up
               </Link>
             </Button>
