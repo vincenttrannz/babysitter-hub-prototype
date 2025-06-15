@@ -18,7 +18,7 @@ services:
       - "traefik.http.routers.babysitter_hub_nginx.service=babysitter_hub_nginx"
       - "traefik.http.routers.babysitter_hub_nginx.rule=Host(`babysitterhub.popthat.nz`)"
       - "traefik.http.services.babysitter_hub_nginx.loadbalancer.server.port=80"
-      - "traefik.http.routers.babysitter_hub_nginx.entrypoints=http,https"
+      - "traefik.http.routers.babysitter_hub_nginx.entrypoints=https"
       # TLS
       - "traefik.http.routers.babysitter_hub_nginx.tls=true"
       - "traefik.http.routers.babysitter_hub_nginx.tls.certresolver=myresolver"
