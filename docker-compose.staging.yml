@@ -1,0 +1,57 @@
+services:
+  nginx:
+    image: nginx:latest
+    restart: unless-stopped
+    container_name: babysitter_hub_nginx
+    ports:
+      - "3001:80"
+    volumes:
+      - ./public:/app/public
+      - ./conf/staging/nginx/:/etc/nginx:ro
+      - ./logs/nginx/:/var/log/nginx
+      - /etc/localtime:/etc/localtime:ro
+    networks:
+      - internal
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.babysitter_hub_nginx.service=babysitter_hub_nginx"
+      - "traefik.http.routers.babysitter_hub_nginx.rule=Host(`babysitterhub.staging.popthat.nz`)"
+      - "traefik.http.services.babysitter_hub_nginx.loadbalancer.server.port=80"
+      - "traefik.http.routers.babysitter_hub_nginx.entrypoints=http,https"
+      # TLS
+      - "traefik.http.routers.babysitter_hub_nginx.tls=true"
+      - "traefik.http.routers.babysitter_hub_nginx.tls.certresolver=myresolver"
+    command: "/bin/sh -c 'sleep 5 && while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    depends_on:
+      - frontend
+
+  frontend:
+    container_name: babysitter_hub_frontend
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        - NODE_ENV=staging
+      target: staging
+    restart: unless-stopped
+    networks:
+      - internal
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/.next
+      - ./logs/frontend:/root/.npm/_logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  internal:
+  web:
+    external: true

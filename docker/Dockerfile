@@ -24,9 +24,31 @@ COPY --chown=node:node ../ ./
 RUN NODE_ENV="production" \
     npm run build
 
+# Prototype from Firebase Studio
+FROM build_nextjs AS prototype
+ENV NODE_ENV=production \
+    ENVIRONMENT=prototype \
+    NEXT_PUBLIC_ENV=prototype \
+    PORT=3000 \
+    NEXT_TELEMETRY_DISABLED=1
+CMD [ "npm", "run", "start" ]
+EXPOSE ${PORT}
+
+# Staging
+FROM build_nextjs AS staging
+ENV NODE_ENV=staging \
+    ENVIRONMENT=staging \
+    NEXT_PUBLIC_ENV=staging \
+    PORT=3000 \
+    NEXT_TELEMETRY_DISABLED=1
+CMD [ "npm", "run", "start" ]
+EXPOSE ${PORT}
+
 # Production
 FROM build_nextjs AS production
 ENV NODE_ENV=production \
+    ENVIRONMENT=production \
+    NEXT_PUBLIC_ENV=production \
     PORT=3000 \
     NEXT_TELEMETRY_DISABLED=1
 CMD [ "npm", "run", "start" ]
